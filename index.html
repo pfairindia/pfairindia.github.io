@@ -29,7 +29,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            color: white; /* Ensure text is visible against the background */
+            color: rgb(255, 255, 255); /* Ensure text is visible against the background */
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -49,7 +49,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #fff; /* White background for loader */
+            background-color: #a6a6a6; /* White background for loader */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -63,8 +63,8 @@
         }
         /* Loader GIF Size Fix */
         #loading-screen img {
-            width: 250px; /* Make GIF larger */
-            height: 250px; /* Make GIF larger */
+            width: 1500px; /* Make GIF larger */
+            height: 1500px; /* Make GIF larger */
             object-fit: contain; /* Ensure the whole GIF is visible */
         }
 
@@ -175,8 +175,7 @@
         .logout-button {
             background-color: #dc2626; /* Red for logout */
             color: white;
-            font-semibold py-1 px-3 rounded-full ml-4
-            font-semibold;
+           
             border-radius: 9999px;
             margin-left: 1rem;
             transition: background-color 0.3s ease;
@@ -186,10 +185,182 @@
         }
 
         /* Keyframe animation for pulse effect */
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-            100% { transform: scale(1); }
+
+.footer::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(193, 32, 47, 0.05), transparent 50%);
+    pointer-events: none;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 3rem;
+    position: relative;
+}
+
+.footer-logo-section {
+    grid-column: span 1;
+}
+
+.footer-logo {
+    max-width: 150px;
+    margin-bottom: 1.5rem;
+}
+
+.footer-description {
+    margin-bottom: 1.5rem;
+    line-height: 1.7;
+    color: #888;
+}
+
+.footer-social {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.social-icon {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+    background-color: var(--primary);
+    transform: translateY(-3px);
+}
+
+.social-icon img {
+    width: 18px;
+    height: 18px;
+}
+
+.footer-column {
+    grid-column: span 1;
+}
+
+.footer-column h4 {
+    color: white;
+    font-weight: 500;
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-bottom: 0.7rem;
+}
+
+.footer-column h4::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background-color: var(--primary);
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 0.9rem;
+}
+
+.footer-links a {
+    color: #999;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.footer-links a:hover {
+    color: var(--primary);
+    transform: translateX(5px);
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    pointer-events: none;
+}
+
+.contact-item a {
+    color: inherit;
+    text-decoration: none;
+    pointer-events: auto;
+    transition: all 0.3s ease;
+}
+
+.contact-item a:hover {
+    color: var(--primary);
+}
+
+.contact-icon {
+    min-width: 18px;
+    opacity: 0.6;
+    height: 20px;
+}
+
+.copyright-bar {
+    margin-top: 3.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    text-align: center;
+    color: #666;
+    font-size: 0.85rem;
+}
+
+.designer-credit a {
+    color: #888;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.designer-credit a:hover {
+    color: var(--primary);
+}
+
+@media screen and (max-width: 900px) {
+    .footer-content {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .footer-logo-section {
+        grid-column: span 2;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-logo-section,
+    .footer-column {
+        grid-column: span 1;
+    }
         }
     </style>
 </head>
@@ -298,37 +469,49 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- News Article 1 -->
                 <div class="bg-gray-50 rounded-lg shadow-md p-6 text-left">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">New Routes Added!</h3>
-                    <p class="text-gray-600 text-sm mb-4">July 20, 2025</p>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">New Chief Executive Officer!</h3>
+                    <p class="text-gray-600 text-sm mb-4">July 28, 2025</p>
                     <p class="text-gray-700 leading-relaxed">
-                        We're excited to announce the expansion of our network with new routes to Singapore and Dubai. Start planning your next virtual flight today!
+                        We're excited to announce our new CEO Mr. <a href="https://discord.com/users/458787021482098698/">Captain Ved.</a> he will ensure everything runs smoothly as we grow this virtual airline into something truly special.
                     </p>
-                    <a href="#" class="text-red-700 hover:text-red-800 font-semibold mt-4 inline-block">Read More &rarr;</a>
+                    <a href="https://discord.com/channels/1341011891941670912/1341015048855748619/1399232294019010591" class="text-red-700 hover:text-red-800 font-semibold mt-4 inline-block">Read More &rarr;</a>
                 </div>
                 <!-- News Article 2 -->
                 <div class="bg-gray-50 rounded-lg shadow-md p-6 text-left">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Community Event: Fly-In to Delhi!</h3>
-                    <p class="text-gray-600 text-sm mb-4">July 15, 2025</p>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Partnerships expands</h3>
+                    <p class="text-gray-600 text-sm mb-4">July 30, 2025</p>
                     <p class="text-700 leading-relaxed">
-                        Join us for our monthly community fly-in event to Indira Gandhi International Airport (VIDP) on August 10th. All pilots welcome!
+                        Air India Virtual is now expanding through partnerships with other virtual airlines. This will allow us to offer more routes and better services to our pilots.
                     </p>
-                    <a href="#" class="text-red-700 hover:text-red-800 font-semibold mt-4 inline-block">Read More &rarr;</a>
+                    <a href="https://discord.com/channels/1341011891941670912/1341015963361083453" class="text-red-700 hover:text-red-800 font-semibold mt-4 inline-block">Read More &rarr;</a>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-8 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-7xl mx-auto text-center text-sm">
-            <p>&copy; 2025 Air India Virtual. All rights reserved.</p>
-            <div class="mt-4 flex justify-center space-x-6">
-                <a href="#" class="text-gray-400 hover:text-white transition duration-300">Privacy Policy</a>
-                <a href="#" class="text-gray-400 hover:text-white transition duration-300">Terms of Service</a>
-                <a href="#" class="text-gray-400 hover:text-white transition duration-300">Sitemap</a>
+   
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-logo-section">
+                    <img src="https://content.presspage.com/uploads/2888/bc5da954-aa70-43ba-9176-708c2fd4fce7/1920_airindialogo.jpg?10000" alt="Air Canada Rouge Virtual Logo" class="footer-logo" />
+                    <div class="footer-social">
+                        <a href="https://discord.gg/C6X2NYRVTe" class="social-icon" aria-label="Discord">
+                            <img src="https://www.svgrepo.com/show/353655/discord-icon.svg" alt="Discord" />
+                        </a>
+                    </div>
+                </div>
+
+                  
+
+            <div class="copyright-bar">
+                <p>
+                    © 2025 Air India Virtual. This is a virtual community and is not affiliated with Air India or any real-world airline. All rights reserved.
+                 
+                </p>
+        
             </div>
-        </div>
-    </footer>
+        </footer>
 
     <!-- Login Modal -->
     <div id="loginModal" class="modal">
