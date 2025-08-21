@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Air India Virtual</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Discord icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
+        .hero-section {
+            /* Using a placeholder that looks like an Air India plane tail */
+            background-image: url('https://placehold.co/1920x1080/EE0721/FFFFFF?text=Air+India+Tail'); /* Updated placeholder for Air India feel */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            width: 100vw;
+            height: calc(100vh - 4rem); /* Full viewport height minus navbar height */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white; /* Ensure text is visible against the background */
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        /* Gradient for buttons */
+        .btn-gradient {
+            background: linear-gradient(to right, #e3342f, #cd1e1a);
+        }
+        .btn-gradient:hover {
+            background: linear-gradient(to right, #cd1e1a, #e3342f);
+        }
+
+        /* Loading Screen Styles */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #fff; /* White background for loader */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999; /* Ensure it's on top of everything */
+            transition: opacity 0.5s ease-out;
+            opacity: 1;
+        }
+        #loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none; /* Disable interaction when hidden */
+        }
+
+        /* Login Modal Styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .modal.show {
+            display: flex; /* Show flex when active */
+            opacity: 1;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+        }
+        .modal.show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .modal-login-button.enabled {
+            background-color: #5865F2; /* Discord blue */
+            cursor: pointer;
+            animation: pulse 2s infinite; /* Add pulse animation */
+        }
+        .modal-login-button {
+            background-color: #8892d1; /* Greyed out Discord blue */
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            cursor: not-allowed;
+        }
+        .modal-login-button.enabled:hover {
+            transform: scale(1.05);
+            background-color: #4b57d9;
+        }
+
+        /* Creator Alert within Modal */
+        #modalCreatorAlert {
+            background-color: #fce8e8;
+            color: #c93e3e;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 15px;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+            display: block; /* Ensure it's block for transition */
+        }
+        #modalCreatorAlert.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* User Info in Navbar */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+        }
+        .user-info img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+        .logout-button {
+            background-color: #dc2626; /* Red for logout */
+            color: white;
+            border-radius: 9999px;
+            margin-left: 1rem;
+            transition: background-color 0.3s ease;
+        }
+        .logout-button:hover {
+            background-color: #b91c1c;
+        }
+
+        /* Keyframe animation for pulse effect */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="flex justify-center items-center">
+        <img src="https://cdn.discordapp.com/attachments/1341026790545555579/1341033935207010377/ezgif.com-video-to-gif-converter-5.gif?ex=68a86c2d&is=68a71aad&hm=c31c64e1d4ec33aa513392378539dc64fd2ef451224cd3ba37226c8ae804b0c3&" alt="Loading..." class="w-32 h-32 rounded-lg">
+    </div>
+
+    <!-- Navbar -->
+    <nav class="bg-red-700 p-4 shadow-lg w-full fixed top-0 z-50">
+        <div class="container mx-auto flex flex-col md:flex-row items-center justify-between">
+            <!-- Logo/Brand -->
+            <div class="flex items-center justify-between w-full md:w-auto">
+                <!-- Air India Logo -->
+                <img src="https://cdn.discordapp.com/attachments/1341026790545555579/1341033358003671070/ezgif.com-video-to-gif-converter-3.gif?ex=68a86ba3&is=68a71a23&hm=4584ea58eae07b62e9f20dd7541bee66cf7dc3800eefca36f80f5681423987f5&" alt="Air India Logo" class="h-10 w-10 mr-2 rounded-full">
+                <a href="#" class="text-white text-2xl font-bold rounded-lg p-2 hover:bg-red-800 transition duration-300">Air India Virtual</a>
+                <!-- Hamburger menu for mobile -->
+                <button id="menu-button" class="text-white text-2xl md:hidden focus:outline-none">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+
+            <!-- Navigation Links -->
+            <div id="nav-links" class="hidden md:flex flex-col md:flex-row md:space-x-8 mt-4 md:mt-0 items-center w-full md:w-auto">
+                <a href="#" class="text-white px-3 py-2 rounded-md text-lg font-medium hover:bg-red-800 transition duration-300 w-full md:w-auto text-center">Home</a>
+                <a href="#" class="text-white px-3 py-2 rounded-md text-lg font-medium hover:bg-red-800 transition duration-300 w-full md:w-auto text-center">Flights</a>
+                <a href="#" class="text-white px-3 py-2 rounded-md text-lg font-medium hover:bg-red-800 transition duration-300 w-full md:w-auto text-center">Pilots</a>
+                <a href="#" class="text-white px-3 py-2 rounded-md text-lg font-medium hover:bg-red-800 transition duration-300 w-full md:w-auto text-center">Book flights</a>
+                <a href="#" class="text-white px-3 py-2 rounded-md text-lg font-medium hover:bg-red-800 transition duration-300 w-full md:w-auto text-center">Contact</a>
+                
+                <!-- Sign In Button / User Actions -->
+                <div class="user-actions mt-4 md:mt-0 md:ml-8 w-full md:w-auto flex justify-center">
+                    <!-- This will be populated by JavaScript -->
+                    <button id="navbar-sign-in-button" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-full flex items-center space-x-2 transition duration-300 w-full md:w-auto justify-center">
+                        <i class="fab fa-discord"></i>
+                        <span>Sign In</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <main class="hero-section">
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-8 drop-shadow-lg leading-tight">
+            Fly High with Air India Virtual
+        </h1>
+        <p class="text-lg sm:text-xl lg:text-2xl mb-12 drop-shadow-md max-w-2xl px-4">
+            Experience the thrill of virtual aviation and join our global community.
+        </p>
+        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
+            <button class="btn-gradient text-white font-bold py-4 px-8 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300 text-lg">
+                Join us
+            </button>
+            <button class="btn-gradient text-white font-bold py-4 px-8 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300 text-lg">
+                Book flights
+            </button>
+        </div>
+    </main>
+
+    <!-- About Us Section -->
+    <section class="bg-white py-16 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto text-center">
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-6">About Air India Virtual</h2>
+            <p class="text-lg text-gray-700 leading-relaxed max-w-3xl mx-auto">
+                Air India Virtual is a dedicated community for flight simulation enthusiasts who wish to experience the thrill of flying for India's flag carrier, Air India. We strive to provide a realistic and engaging virtual airline experience, offering a vast route network, regular events, and a supportive community for pilots of all skill levels.
+            </p>
+            <p class="text-lg text-gray-700 leading-relaxed max-w-3xl mx-auto mt-4">
+                Our mission is to foster a passion for aviation, promote learning, and create a fun and challenging environment where virtual pilots can hone their skills and share their love for flying.
+            </p>
+        </div>
+    </section>
+
+    <!-- Our Fleet Section -->
+    <section class="bg-gray-200 py-16 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto text-center">
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-10">Our Fleet</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Aircraft Card 1 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
+                    <img src="https://placehold.co/600x400/FF0000/FFFFFF?text=Boeing+777" alt="Boeing 777" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Boeing 777</h3>
+                        <p class="text-gray-700 text-sm">Our long-haul workhorse, perfect for international flights.</p>
+                    </div>
+                </div>
+                <!-- Aircraft Card 2 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
+                    <img src="https://placehold.co/600x400/0000FF/FFFFFF?text=Airbus+A320" alt="Airbus A320" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Airbus A320</h3>
+                        <p class="text-gray-700 text-sm">Ideal for domestic and short-haul international routes.</p>
+                    </div>
+                </div>
+                <!-- Aircraft Card 3 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
+                    <img src="https://placehold.co/600x400/008000/FFFFFF?text=Boeing+787" alt="Boeing 787" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Boeing 787 Dreamliner</h3>
+                        <p class="text-gray-700 text-sm">Modern and efficient, for medium to long-range operations.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- News & Updates Section -->
+    <section class="bg-white py-16 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto text-center">
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-10">Latest News & Updates</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- News Article 1 -->
+                <div class="bg-gray-50 rounded-lg shadow-md p-6 text-left">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">New Routes Added!</h3>
+                    <p class="text-gray-600 text-sm mb-4">July 20, 2025</p>
+                    <p class="text-gray-700 leading-relaxed">
+                        We're excited to announce the expansion of our network with new routes to Singapore and Dubai. Start planning your next virtual flight today!
+                    </p>
+                    <a href="#" class="text-red-700 hover:text-red-800 font-semibold mt-4 inline-block">Read More &rarr;</a>
+                </div>
+                <!-- News Article 2 -->
+                <div class="bg-gray-50 rounded-lg shadow-md p-6 text-left">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Community Event: Fly-In to Delhi!</h3>
+                    <p class="text-gray-600 text-sm mb-4">July 15, 2025</p>
+                    <p class="text-700 leading-relaxed">
+                        Join us for our monthly community fly-in event to Indira Gandhi International Airport (VIDP) on August 10th. All pilots welcome!
+                    </p>
+                    <a href="#" class="text-red-700 hover:text-red-800 font-semibold mt-4 inline-block">Read More &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto text-center text-sm">
+            <p>&copy; 2025 Air India Virtual. All rights reserved.</p>
+            <div class="mt-4 flex justify-center space-x-6">
+                <a href="#" class="text-gray-400 hover:text-white transition duration-300">Privacy Policy</a>
+                <a href="#" class="text-gray-400 hover:text-white transition duration-300">Terms of Service</a>
+                <a href="#" class="text-gray-400 hover:text-white transition duration-300">Sitemap</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="document.getElementById('loginModal').classList.remove('show');">&times;</span>
+            <h2 class="text-2xl font-bold mb-4">Login to Air India Virtual</h2>
+            <p class="text-gray-700 mb-4">Please type "read" below to enable the login button and proceed.</p>
+            <input type="text" id="readInput" placeholder="Type 'read' here" class="p-2 border border-gray-300 rounded-md w-full mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <a id="modalLoginButton" href="#" class="modal-login-button">
+                <i class="fab fa-discord"></i>
+                <span>Login with Discord</span>
+            </a>
+            <div id="modalCreatorAlert" class="mt-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                <strong class="font-bold">Important:</strong>
+                <span class="block sm:inline">You must type "read" above to enable the login button.</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs and Discord Login Script -->
+    <script type="module">
+        // Firebase Imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global Firebase variables
+        let app;
+        let auth;
+        let db;
+        let firebaseUserId = null; // Stores the Firebase authenticated user ID
+
+        // Your Discord Client ID from the Discord Developer Portal
+        // IMPORTANT: Update this with YOUR Discord Application's Client ID
+        const CLIENT_ID = "1408133830690209872";
+        // The Redirect URI must EXACTLY match what's configured in your Discord OAuth2 settings
+        // IMPORTANT: Update this with YOUR Redirect URI
+        const REDIRECT_URI = "https://pfairindia.github.io"; // e.g., "https://yourairvirtual.github.io/aev/"
+
+        // Discord authorization URL
+        const AUTH_URL = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=identify`;
+
+        // Select elements
+        const userActionsDiv = document.querySelector(".user-actions");
+        const navbarSignInButton = document.getElementById("navbar-sign-in-button");
+        const loginModal = document.getElementById("loginModal");
+        const modalLoginButton = document.getElementById("modalLoginButton");
+        const loadingScreen = document.getElementById('loading-screen');
+        const modalCreatorAlert = document.getElementById('modalCreatorAlert');
+        const readInput = document.getElementById('readInput');
+
+        // Provided Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAdN6__6BSVsaS6K3F0qcF8ThnGH3r0GcM",
+            authDomain: "airindiavirtualpf.firebaseapp.com",
+            projectId: "airindiavirtualpf",
+            storageBucket: "airindiavirtualpf.firebasestorage.app",
+            messagingSenderId: "418511928890",
+            appId: "1:418511928890:web:3eeab7ba6c5312d9f4bf03",
+            measurementId: "G-VRB609NTRL"
+        };
+
+        // --- Firebase Initialization and Authentication ---
+        // Initialize Firebase and set up auth listener on DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Initialize Firebase with the provided configuration
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+
+                // Mandatory App ID for Firestore paths
+                const appId = firebaseConfig.projectId; // Using projectId as appId for consistency
+
+                let userSignedIn = false;
+
+                // Attempt to sign in with custom token if available
+                if (typeof __initial_auth_token !== 'undefined') {
+                    try {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                        userSignedIn = true;
+                        console.log("Signed in with custom token.");
+                    } catch (tokenError) {
+                        console.warn("Custom token sign-in failed:", tokenError.code, tokenError.message);
+                        // If custom token fails specifically with mismatch or invalid token,
+                        // proceed to anonymous sign-in. Otherwise, re-throw or handle differently.
+                        if (tokenError.code === 'auth/custom-token-mismatch' || tokenError.code === 'auth/invalid-custom-token') {
+                            console.log("Falling back to anonymous sign-in due to custom token issue.");
+                            try {
+                                await signInAnonymously(auth);
+                                userSignedIn = true;
+                                console.log("Signed in anonymously.");
+                            } catch (anonError) {
+                                console.error("Anonymous sign-in also failed:", anonError);
+                            }
+                        } else {
+                            // If it's a different kind of error with custom token, still try anonymous as a general fallback.
+                            console.error("Unhandled authentication error during custom token sign-in; attempting anonymous fallback:", tokenError);
+                            try {
+                                await signInAnonymously(auth);
+                                userSignedIn = true;
+                                console.log("Signed in anonymously after custom token failure.");
+                            } catch (anonError) {
+                                console.error("Anonymous sign-in also failed after custom token error:", anonError);
+                            }
+                        }
+                    }
+                }
+
+                // If not signed in yet (e.g., custom token was not provided), attempt anonymous sign-in
+                if (!userSignedIn) {
+                    try {
+                        await signInAnonymously(auth);
+                        userSignedIn = true;
+                        console.log("Signed in anonymously.");
+                    } catch (anonError) {
+                        console.error("Anonymous sign-in failed:", anonError);
+                    }
+                }
+
+                // Proceed only if a user is authenticated (either custom or anonymous)
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        firebaseUserId = user.uid;
+                        console.log("Firebase user authenticated:", firebaseUserId);
+                        await handleDiscordLoginState(firebaseUserId, appId);
+                    } else {
+                        firebaseUserId = null;
+                        console.log("Firebase user signed out or not authenticated.");
+                        // If Firebase user logs out, clear Discord data and show login
+                        userActionsDiv.innerHTML = `
+                            <button id="navbar-sign-in-button-logged-out" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-full flex items-center space-x-2 transition duration-300 w-full md:w-auto justify-center">
+                                <i class="fab fa-discord"></i>
+                                <span>Sign In</span>
+                            </button>
+                        `;
+                        document.getElementById("navbar-sign-in-button-logged-out").onclick = showLoginModal;
+                        showLoginModal();
+                    }
+                });
+
+            } catch (mainError) {
+                console.error("Critical error during Firebase initialization or initial authentication flow:", mainError);
+                // Fallback to showing login button if Firebase initialization fails
+                userActionsDiv.innerHTML = `
+                    <button id="navbar-sign-in-button-error" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-full flex items-center space-x-2 transition duration-300 w-full md:w-auto justify-center">
+                        <i class="fab fa-discord"></i>
+                        <span>Sign In</span>
+                    </button>
+                `;
+                document.getElementById("navbar-sign-in-button-error").onclick = showLoginModal;
+                showLoginModal();
+            }
+        });
+
+        /**
+         * Handles the Discord login flow after Firebase authentication is ready.
+         * @param {string} currentFirebaseUserId - The UID of the currently authenticated Firebase user.
+         * @param {string} appId - The current application ID.
+         */
+        async function handleDiscordLoginState(currentFirebaseUserId, appId) {
+            const hash = window.location.hash.substring(1);
+            const params = new URLSearchParams(hash);
+            const token = params.get("access_token");
+
+            if (token) {
+                // Clear the hash from the URL
+                window.history.replaceState({}, document.title, REDIRECT_URI);
+
+                try {
+                    const response = await fetch("https://discord.com/api/users/@me", {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+
+                    if (!response.ok) {
+                        console.error("Discord API error:", response.status, response.statusText);
+                        await deleteDiscordUserFromFirestore(currentFirebaseUserId, appId); // Clear any old data
+                        showLoginModal();
+                        return;
+                    }
+                    const user = await response.json();
+
+                    if (user.id) {
+                        await saveDiscordUserToFirestore(user, currentFirebaseUserId, appId);
+                        showUser(user);
+                    } else {
+                        console.error("Invalid Discord user data received:", user);
+                        await deleteDiscordUserFromFirestore(currentFirebaseUserId, appId);
+                        showLoginModal();
+                    }
+                } catch (error) {
+                    console.error("Error during Discord user fetch or processing:", error);
+                    await deleteDiscordUserFromFirestore(currentFirebaseUserId, appId);
+                    showLoginModal();
+                }
+            } else {
+                // Check if user is already logged in via Discord through Firestore
+                const savedUser = await getDiscordUserFromFirestore(currentFirebaseUserId, appId);
+                if (savedUser) {
+                    showUser(savedUser);
+                } else {
+                    showLoginModal(); // Show login modal if no Discord user found for this Firebase user
+                }
+            }
+        }
+
+        // --- Firestore Operations for Discord User Data ---
+
+        /**
+         * Saves Discord user data to Firestore.
+         * @param {object} user - The Discord user object.
+         * @param {string} firebaseUid - The Firebase user ID.
+         * @param {string} appId - The application ID.
+         */
+        async function saveDiscordUserToFirestore(user, firebaseUid, appId) {
+            try {
+                const docRef = doc(db, `artifacts/${appId}/users/${firebaseUid}/discord_users`, user.id);
+                await setDoc(docRef, user, { merge: true }); // Use merge to update existing fields
+                console.log("Discord user data saved to Firestore for Firebase UID:", firebaseUid);
+            } catch (e) {
+                console.error("Error adding Discord user to Firestore: ", e);
+            }
+        }
+
+        /**
+         * Retrieves Discord user data from Firestore for the current Firebase user.
+         * @param {string} firebaseUid - The Firebase user ID.
+         * @param {string} appId - The application ID.
+         * @returns {Promise<object|null>} The Discord user object or null if not found.
+         */
+        async function getDiscordUserFromFirestore(firebaseUid, appId) {
+            try {
+                // The Discord user ID is used as the document ID for simplicity, assuming one Discord user per Firebase user for this app.
+                // In a multi-Discord-account-per-Firebase-user scenario, you'd query a subcollection.
+                // For this example, we'll try to get *any* discord user associated with this Firebase UID.
+                // A more robust solution might store a reference to the active Discord user ID on the Firebase user's profile.
+                // For now, we'll just check if *any* document exists in their discord_users collection.
+                const userDiscordCollectionRef = collection(db, `artifacts/${appId}/users/${firebaseUid}/discord_users`);
+                const querySnapshot = await getDocs(userDiscordCollectionRef);
+                if (!querySnapshot.empty) {
+                    const firstDoc = querySnapshot.docs[0];
+                    console.log("Discord user data retrieved from Firestore for Firebase UID:", firebaseUid);
+                    return firstDoc.data();
+                }
+                console.log("No Discord user data found in Firestore for Firebase UID:", firebaseUid);
+                return null;
+            } catch (e) {
+                console.error("Error getting Discord user from Firestore: ", e);
+                return null;
+            }
+        }
+
+        /**
+         * Deletes Discord user data from Firestore.
+         * @param {string} firebaseUid - The Firebase user ID.
+         * @param {string} appId - The application ID.
+         */
+        async function deleteDiscordUserFromFirestore(firebaseUid, appId) {
+             try {
+                // As we don't have the specific Discord user ID easily when logging out,
+                // we'll fetch and delete all Discord user documents associated with this Firebase user.
+                const userDiscordCollectionRef = collection(db, `artifacts/${appId}/users/${firebaseUid}/discord_users`);
+                const querySnapshot = await getDocs(userDiscordCollectionRef);
+                for (const docSnapshot of querySnapshot.docs) {
+                    await deleteDoc(doc(db, `artifacts/${appId}/users/${firebaseUid}/discord_users`, docSnapshot.id));
+                    console.log("Deleted Discord user doc:", docSnapshot.id);
+                }
+                console.log("All Discord user data cleared from Firestore for Firebase UID:", firebaseUid);
+            } catch (e) {
+                console.error("Error deleting Discord user from Firestore: ", e);
+            }
+        }
+
+        // --- Loading Screen Logic ---
+        /**
+         * Hides the loading screen.
+         * This function runs when the browser's 'load' event fires.
+         */
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                loadingScreen.classList.add('hidden');
+                document.body.style.overflowY = 'auto'; // Re-enable scroll after loading
+            }, 1000); // Loading screen visible for 1 second
+        });
+
+        // Initially hide scrollbar while loading to prevent content flash
+        document.body.style.overflowY = 'hidden';
+
+        // --- Discord UI and Interaction Logic ---
+
+        /**
+         * Displays user information (avatar, username) and a logout button.
+         * @param {object} user - The Discord user object.
+         */
+        function showUser(user) {
+            const avatarUrl = user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : 'https://discord.com/assets/f135b1fcd3d2c4935480d19e910540d5.png';
+            userActionsDiv.innerHTML = `
+                <div class="user-info">
+                    <img src="${avatarUrl}" alt="${user.username} Avatar">
+                    <span>${user.username}${user.discriminator && user.discriminator !== '0' ? `#${user.discriminator}` : ''}</span>
+                </div>
+                <button id="logout-btn" class="logout-button">Logout</button>
+            `;
+
+            // Attach event listener to the logout button
+            document.getElementById("logout-btn").onclick = async () => {
+                await deleteDiscordUserFromFirestore(firebaseUserId, appId); // Clear user data from Firestore
+                await signOut(auth); // Sign out from Firebase Auth
+                // Redirect or refresh to clear the session and show login button
+                window.location.replace(REDIRECT_URI);
+            };
+
+            // Hide the login modal if it's currently shown
+            loginModal.classList.remove("show");
+        }
+
+        /**
+         * Displays the custom Discord login modal and the creator alert within it.
+         */
+        function showLoginModal() {
+            // Set the modal's login button href
+            modalLoginButton.href = AUTH_URL;
+            // Initially disable the login button
+            modalLoginButton.classList.remove('enabled');
+
+            // Show the modal
+            loginModal.classList.add("show");
+            
+            // Show the creator alert inside the modal after a short delay
+            setTimeout(() => {
+                modalCreatorAlert.classList.add('show');
+            }, 500); // Show alert 0.5 seconds after modal appears
+
+            // Ensure the navbar sign-in button is linked to opening the modal
+            const currentNavbarSignInButton = document.getElementById("navbar-sign-in-button") || document.getElementById("navbar-sign-in-button-logged-out") || document.getElementById("navbar-sign-in-button-error");
+            if (currentNavbarSignInButton) {
+                currentNavbarSignInButton.onclick = showLoginModal;
+            }
+        }
+
+        // Attach click listener to the initial "Sign In" button in the navbar
+        if (navbarSignInButton) {
+            navbarSignInButton.onclick = showLoginModal;
+        }
+
+        // Event listener for the 'read' input field
+        readInput.addEventListener('input', () => {
+            if (readInput.value.toLowerCase() === 'read') {
+                modalLoginButton.classList.add('enabled');
+                modalCreatorAlert.style.opacity = '0'; // Hide the alert
+                modalCreatorAlert.style.transform = 'translateY(-10px)';
+                setTimeout(() => {
+                    modalCreatorAlert.style.display = 'none'; // Fully remove it after transition
+                }, 500); 
+            } else {
+                modalLoginButton.classList.remove('enabled');
+                // Re-show alert if input changes from 'read'
+                modalCreatorAlert.style.display = 'block'; // Make sure it's display block for transition
+                setTimeout(() => { // Small delay to re-trigger transition
+                    modalCreatorAlert.style.opacity = '1';
+                    modalCreatorAlert.style.transform = 'translateY(0)';
+                }, 10);
+            }
+        });
+
+        // JavaScript for mobile menu toggle
+        document.getElementById('menu-button').addEventListener('click', function() {
+            const navLinks = document.getElementById('nav-links');
+            navLinks.classList.toggle('hidden');
+            navLinks.classList.toggle('flex');
+            navLinks.classList.toggle('flex-col');
+        });
+    </script>
+</body>
+</html>
