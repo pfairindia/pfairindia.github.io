@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Air India Virtual - Book Your Dream Flight</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            background-color: #0F172A; /* Dark blue-gray for the page background */
+            color: #E2E8F0; /* Light text color */
+        }
+        
+        /* Global Styles for headings */
+        h1, h2, h3, h4 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 800;
+            color: #F8FAFC; /* Off-white for headings */
+        }
+
+        /* Hero section with a beautiful background image */
+        .booking-hero-new {
+            background-image: url('https://ik.imagekit.io/hswtnwf8i/Screenshot_2025-02-17_at_3.35.17_PM.png_ex=68a968be&is=68a8173e&hm=1923315b45fe33c5df76a25bd0d73e13da551dcc8dbc8ce25af9af43dad86cdb&?updatedAt=1755857710984'); /* High-quality night interior placeholder */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* Parallax effect */
+            min-height: 100vh; /* Full viewport height */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 0;
+        }
+        .booking-hero-new::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.4)); /* Dark, subtle gradient overlay */
+            z-index: 1;
+        }
+
+        /* Form Container - Central, elegant card */
+        .form-card-new {
+            background-color: rgba(255, 255, 255, 0.08); /* Semi-transparent white */
+            backdrop-filter: blur(10px); /* Frosted glass effect */
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            padding: 3rem 2.5rem;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+        .form-card-new h2 {
+            font-weight: 900;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #F8FAFC;
+        }
+
+        /* Input Fields */
+        .input-field-new {
+            background-color: rgba(255, 255, 255, 0.15); /* Lighter transparent input */
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #F8FAFC;
+            padding: 1rem 1.25rem;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .input-field-new::placeholder {
+            color: #CBD5E1; /* Light gray placeholder */
+        }
+        .input-field-new:focus {
+            outline: none;
+            border-color: #EF4444; /* Air India red on focus */
+            background-color: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.3);
+        }
+        /* Style for date inputs (webkits) to ensure consistency */
+        .input-field-new[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1); /* Makes the calendar icon white */
+            cursor: pointer;
+        }
+        .input-field-new[type="date"] {
+            color: #F8FAFC; /* Ensure date text is white */
+        }
+        /* Style for select dropdown arrows (webkits) */
+        .input-field-new.select-arrow {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-color: #DC2626;
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1em;
+            padding-right: 2.5rem; /* Make space for the arrow */
+        }
+        .input-field-new option {
+            background-color: #0F172A; /* Dark background for dropdown options */
+            color: #F8FAFC;
+        }
+
+        /* Submit Button - Air India Red Gradient, Animated */
+        .btn-submit-new {
+            background: linear-gradient(90deg, #EF4444, #DC2626); /* Red gradient */
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 9999px; /* Pill shape */
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+        }
+        .btn-submit-new:hover:not(:disabled) {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 12px 30px rgba(239, 68, 68, 0.6);
+            background: linear-gradient(90deg, #DC2626, #EF4444); /* Reverse gradient on hover */
+        }
+        .btn-submit-new:disabled {
+            background: rgba(100, 116, 139, 0.6); /* Grayed out, semi-transparent */
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* Message Box Styling - Minimalist and integrated */
+        .message-box-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .message-box-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .message-box-content {
+            background-color: #1A202C; /* Dark background */
+            padding: 2.5rem;
+            border-radius: 1rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            max-width: 450px;
+            width: 90%;
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .message-box-overlay.show .message-box-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .message-box-content h3 {
+            color: #EF4444; /* Red for title */
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+        .message-box-content p {
+            color: #CBD5E1; /* Light gray for message */
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+        .message-box-content button {
+            background: linear-gradient(90deg, #60A5FA, #3B82F6); /* Blue gradient for close button */
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+        .message-box-content button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+            background: linear-gradient(90deg, #3B82F6, #60A5FA);
+        }
+
+        /* Discord Login Message (When not logged in) */
+        .discord-login-required-message {
+            background-color: rgba(239, 68, 68, 0.15); /* Light red, semi-transparent */
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #F8FAFC; /* White text */
+            padding: 1.25rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 500;
+            display: none; /* Hidden by default, shown by JS */
+        }
+        .discord-login-required-message a {
+            color: #60A5FA; /* Blue link */
+            text-decoration: underline;
+            font-weight: 600;
+        }
+        .discord-login-required-message.show {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-darkblue text-lightgray">
+
+    <div class="booking-hero-new">
+        <div class="form-card-new">
+            <h2 class="text-white">Book Your Dream Flight</h2>
+            <p class="text-gray-300 mb-8">Embark on your next virtual adventure with Air India Virtual.</p>
+
+            <div id="discordLoginMessage" class="discord-login-required-message">
+                You must be logged in with Discord on the <a href="index.html">main page</a> to book a flight.
+            </div>
+
+            <form id="flightBookingForm" class="space-y-6">
+                <input type="hidden" name="Discord Username" id="discordUsernameHidden">
+
+                <div>
+                    <label for="origin" class="block text-gray-300 text-sm font-semibold mb-2 text-left">Departure Airport:</label>
+                    <select id="origin" name="Departure Airport" class="input-field-new w-full select-arrow" required>
+                        <option value="" class="text-gray-400">Select Departure Airport</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="destination" class="block text-gray-300 text-sm font-semibold mb-2 text-left">Arrival Airport:</label>
+                    <select id="destination" name="Arrival Airport" class="input-field-new w-full select-arrow" required>
+                        <option value="" class="text-gray-400">Select Arrival Airport</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="flight-date" class="block text-gray-300 text-sm font-semibold mb-2 text-left">Departure Date:</label>
+                    <input type="date" id="flight-date" name="Departure Date" class="input-field-new w-full" required>
+                </div>
+
+                <div>
+                    <label for="passengers" class="block text-gray-300 text-sm font-semibold mb-2 text-left">Number of Passengers:</label>
+                    <input type="number" id="passengers" name="Number of Passengers" min="1" value="1" class="input-field-new w-full" required>
+                </div>
+
+                <div>
+                    <label for="flight-class" class="block text-gray-300 text-sm font-semibold mb-2 text-left">Class:</label>
+                    <select id="flight-class" name="Flight Class" class="input-field-new w-full select-arrow" required>
+                        <option value="Economy">Economy</option>
+                        <option value="Business">Business</option>
+                        <option value="First Class">First Class</option>
+                    </select>
+                </div>
+
+                <div class="flex justify-center pt-4">
+                    <button type="submit" id="submitButton" class="btn-submit-new w-full">
+                        Submit Booking
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Custom Message Box for errors and alerts -->
+    <div id="messageBoxOverlay" class="message-box-overlay">
+        <div class="message-box-content">
+            <h3 id="messageBoxTitle"></h3>
+            <p id="messageBoxText"></p>
+            <button id="messageBoxCloseButton">Got It!</button>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs and script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD09Wu6-wyIIDKkGi4TKhn4NKax1r7AWUk",
+            authDomain: "flyae-backend.firebaseapp.com",
+            projectId: "flyae-backend",
+            storageBucket: "flyae-backend.firebasestorage.app",
+            messagingSenderId: "610108789668",
+            appId: "1:610108789668:web:ae0d71ab7970b0dbb72731",
+            measurementId: "G-MHQJ6BBW4G"
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Your Discord Client ID from the Discord Developer Portal (used for main page, but kept for consistency)
+        const CLIENT_ID = "1408133830690209872";
+        // The Redirect URI for the main page (kept for consistency)
+        const MAIN_REDIRECT_URI = "https://pfairindia.github.io"; 
+
+        // Get form elements
+        const flightBookingForm = document.getElementById('flightBookingForm');
+        const originSelect = document.getElementById('origin');
+        const destinationSelect = document.getElementById('destination');
+        const flightDateInput = document.getElementById('flight-date');
+        const passengersInput = document.getElementById('passengers');
+        const submitButton = document.getElementById('submitButton');
+        const discordUsernameHidden = document.getElementById('discordUsernameHidden');
+        const discordLoginMessage = document.getElementById('discordLoginMessage');
+
+        // Custom Message Box Elements
+        const messageBoxOverlay = document.getElementById('messageBoxOverlay');
+        const messageBoxTitle = document.getElementById('messageBoxTitle');
+        const messageBoxText = document.getElementById('messageBoxText');
+        const messageBoxCloseButton = document.getElementById('messageBoxCloseButton');
+
+        // Function to show custom message box
+        function showMessageBox(title, message) {
+            messageBoxTitle.textContent = title;
+            messageBoxText.textContent = message;
+            messageBoxOverlay.classList.add('show');
+        }
+
+        // Function to hide custom message box
+        messageBoxCloseButton.addEventListener('click', () => {
+            messageBoxOverlay.classList.remove('show');
+        });
+        messageBoxOverlay.addEventListener('click', (event) => {
+            if (event.target === messageBoxOverlay) {
+                messageBoxOverlay.classList.remove('show');
+            }
+        });
+
+        // Function to disable/enable the booking form
+        function setFormEnabled(enabled) {
+            const formElements = flightBookingForm.querySelectorAll('input, select, button');
+            formElements.forEach(element => {
+                element.disabled = !enabled;
+            });
+            submitButton.disabled = !enabled; // Explicitly disable submit button
+            if (enabled) {
+                discordLoginMessage.classList.remove('show');
+            } else {
+                discordLoginMessage.classList.add('show');
+            }
+        }
+
+        // List of unique airports
+        const airports = [
+            "Punta Cana", "Cibao", "Gran Canarias", "Larnaca", "Gatwick", "Menorca", "Kittila"
+        ].sort();
+
+        // Populate dropdowns with airport options
+        function populateAirportSelects() {
+            airports.forEach(airport => {
+                const optionOrigin = document.createElement('option');
+                optionOrigin.value = airport;
+                optionOrigin.textContent = airport;
+                originSelect.appendChild(optionOrigin);
+
+                const optionDestination = document.createElement('option');
+                optionDestination.value = airport;
+                optionDestination.textContent = airport;
+                destinationSelect.appendChild(optionDestination);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            populateAirportSelects();
+
+            // Set min date for flight date to today
+            const today = new Date().toISOString().split('T')[0];
+            flightDateInput.min = today;
+
+            // Check Discord login status from localStorage
+            const savedUser = JSON.parse(localStorage.getItem("discordUser"));
+
+            if (savedUser && savedUser.username) {
+                // If user is logged in via Discord, populate hidden field and enable form
+                const username = savedUser.discriminator && savedUser.discriminator !== '0'
+                    ? `${savedUser.username}#${savedUser.discriminator}`
+                    : savedUser.username;
+                discordUsernameHidden.value = username;
+                setFormEnabled(true);
+                console.log("Discord user detected:", username, "Form enabled.");
+            } else {
+                // If not logged in via Discord, disable form and show message
+                discordUsernameHidden.value = "Not Logged In";
+                setFormEnabled(false);
+                console.log("No Discord user detected. Form disabled.");
+            }
+
+            // --- FORM SUBMISSION LOGIC ---
+            flightBookingForm.addEventListener('submit', async (event) => {
+                event.preventDefault(); // Prevent default form submission
+                
+                // Double-check login status before allowing submission
+                if (discordUsernameHidden.value === "Not Logged In" || submitButton.disabled) {
+                    showMessageBox("Login Required", "You must log in with Discord on the main page to book a flight.");
+                    return;
+                }
+
+                const origin = originSelect.value;
+                const destination = destinationSelect.value;
+                const flightDate = flightDateInput.value;
+                const passengers = document.getElementById('passengers').value;
+                const flightClass = document.getElementById('flight-class').value;
+
+                // Basic validation
+                if (origin === "" || destination === "" || flightDate === "" || passengers === "" || flightClass === "") {
+                    showMessageBox("Validation Error", "Please fill in all flight details.");
+                    return;
+                }
+
+                if (origin === destination) {
+                    showMessageBox("Invalid Route", "Departure and Arrival airports cannot be the same. Please select different airports.");
+                    return;
+                }
+                
+                const bookingData = {
+                    discordUsername: discordUsernameHidden.value, // Use Discord username as identifier
+                    origin: origin,
+                    destination: destination,
+                    flightDate: flightDate,
+                    passengers: parseInt(passengers, 10),
+                    flightClass: flightClass,
+                    timestamp: new Date().toISOString()
+                };
+
+                try {
+                    const appId = typeof __app_id !== 'undefined' ? __app_id : firebaseConfig.projectId;
+                    const bookingsCollectionPath = `/artifacts/${appId}/public/data/flight_bookings`;
+                    const bookingsRef = collection(db, bookingsCollectionPath);
+                    
+                    await addDoc(bookingsRef, bookingData);
+                    
+                    showMessageBox("Booking Confirmed!", `Your flight from ${origin} to ${destination} has been successfully submitted by ${discordUsernameHidden.value}!`);
+                    flightBookingForm.reset(); // Clear form after successful submission
+                } catch (error) {
+                    console.error('Error submitting booking:', error);
+                    showMessageBox("Submission Failed", "There was an error submitting your booking. Please try again later.");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
