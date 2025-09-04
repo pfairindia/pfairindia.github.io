@@ -1,1 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Air India Virtual</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+ <link rel="icon" href="https://ik.imagekit.io/hswtnwf8i/When_youre_on_the_go_get_important_updates_all_in_one_place__check-in_reminders_gate_announcements_live_departure_updates_and_baggage_carousel_details__You...-removebg-preview.png_ex=68a9158c&is=68a7c40c&hm=f4f6d948c6ffb05367359bb3376ab02398c91064561df3f1596f1dfc3c493093&?updatedAt=1755857790789" type="image/png">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
+        .hero-section {
+            /* Using a placeholder that looks like an Air India plane tail */
+            background-image: url('https://ik.imagekit.io/hswtnwf8i/Screenshot_2025-02-17_at_3.35.17_PM.png_ex=68a968be&is=68a8173e&hm=1923315b45fe33c5df76a25bd0d73e13da551dcc8dbc8ce25af9af43dad86cdb&?updatedAt=1755857710984'); /* Updated placeholder for Air India feel */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            width: 100vw;
+            height: 100vh; /* Full viewport height minus navbar height */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: rgb(255, 255, 255); /* Ensure text is visible against the background */
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        /* Gradient for buttons */
+        .btn-gradient {
+            background: linear-gradient(to right, #e3342f, #cd1e1a);
+        }
+        .btn-gradient:hover {
+            background: linear-gradient(to right, #cd1e1a, #e3342f);
+        }
 
+        /* Login Modal Styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .modal.show {
+            display: flex; /* Show flex when active */
+            opacity: 1;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+        }
+        .modal.show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .modal-login-button.enabled {
+            background-color: #5865F2; /* Discord blue */
+            cursor: pointer;
+            animation: pulse 2s infinite; /* Add pulse animation */
+        }
+        .modal-login-button {
+            background-color: #8892d1; /* Greyed out Discord blue */
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            cursor: not-allowed;
+        }
+        .modal-login-button.enabled:hover {
+            transform: scale(1.05);
+            background-color: #4b57d9;
+        }
+
+        /* Creator Alert within Modal */
+        #modalCreatorAlert {
+            background-color: #fce8e8;
+            color: #c93e3e;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 15px;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+            display: block; /* Ensure it's block for transition */
+        }
+        #modalCreatorAlert.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* User Info in Navbar */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+        }
+        .user-info img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+        .logout-button {
+            background-color: #dc2626; /* Red for logout */
+            color: white;
+           
+            border-radius: 9999px;
+            margin-left: 1rem;
+            transition: background-color 0.3s ease;
+        }
+        .logout-button:hover {
+            background-color: #b91c1c;
+        }
+
+        /* Keyframe animation for pulse effect */
+
+.footer::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(193, 32, 47, 0.05), transparent 50%);
+    pointer-events: none;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 3rem;
+    position: relative;
+}
+
+.footer-logo-section {
+    grid-column: span 1;
+}
+
+.footer-logo {
+    max-width: 150px;
+    margin-bottom: 1.5rem;
+}
+
+.footer-description {
+    margin-bottom: 1.5rem;
+    line-height: 1.7;
+    color: #888;
+}
+
+.footer-social {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.social-icon {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+    background-color: var(--primary);
+    transform: translateY(-3px);
+}
+
+.social-icon img {
+    width: 18px;
+    height: 18px;
+}
+
+.footer-column {
+    grid-column: span 1;
+}
+
+.footer-column h4 {
+    color: white;
+    font-weight: 500;
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-bottom: 0.7rem;
+}
+
+.footer-column h4::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background-color: var(--primary);
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 0.9rem;
+}
+
+.footer-links a {
+    color: #999;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.footer-links a:hover {
+    color: var(--primary);
+    transform: translateX(5px);
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    pointer-events: none;
+}
+
+.contact-item a {
+    color: inherit;
+    text-decoration: none;
+    pointer-events: auto;
+    transition: all 0.3s ease;
+}
+
+.contact-item a:hover {
+    color: var(--primary);
+}
+
+.contact-icon {
+    min-width: 18px;
+    opacity: 0.6;
+    height: 20px;
+}
+
+.copyright-bar {
+    margin-top: 3.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    text-align: center;
+    color: #666;
+    font-size: 0.85rem;
+}
+
+.designer-credit a {
+    color: #888;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.designer-credit a:hover {
+    color: var(--primary);
+}
+
+@media screen and (max-width: 900px) {
+    .footer-content {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .footer-logo-section {
+        grid-column: span 2;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-logo-section,
+    .footer-column {
+        grid-column: span 1;
+    }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <nav class="bg-red-700 p-4 shadow-lg w-full fixed top-0 z-50">
+        <div class="container mx-auto flex flex-col md:flex-row items-center justify-between">
+            <div class="flex items-center justify-between w-full md:w-auto">
+                <img src="https://ik.imagekit.io/hswtnwf8i/When_youre_on_the_go_get_important_updates_all_in_one_place__check-in_reminders_gate_announcements_live_departure_updates_and_baggage_carousel_details__You...-removebg-preview.png_ex=68a9158c&is=68a7c40c&hm=f4f6d948c6ffb05367359bb3376ab02398c91064561df3f1596f1dfc3c493093&?updatedAt=1755857790789" alt="Air India Logo" class="h-10 w-10 mr-2 rounded-full">
+                <a href="#" class="text-white text-2xl font-bold rounded-lg p-2 hover:bg-red-800 transition duration-300">Air India Virtual</a>
+                <button id="menu-button" class="text-white text-2xl md:hidden focus:outline-none">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+
+            <div id="nav-links" class="hidden md:flex flex-col md:flex-row md:space-x-8 mt-4 md:mt-0 items-center w-full md:w-auto">
+                <a href="#" class="text-white px-3 py-2 rounded-md text-lg font-medium hover:bg-red-800 transition duration-300 w-full md:w-auto text-center">Home</a>
+                <a href="/src/catch%20error/404page.html/" class="text-white px-3 py-2 rounded-md text-lg font-medium hover:bg-red-800 transition duration-300 w-full md:w-auto text-center">Pilots</a>
+                <a href="/flightbooking/" class="text-white px-3 py-2 rounded-md text-lg font-medium hover:bg-red-800 transition duration-300 w-full md:w-auto text-center">Book flights</a>
+                <a href="https://discord.com/channels/1341011891941670912/1341016185486970995" class="text-white px-3 py-2 rounded-md text-lg font-medium hover:bg-red-800 transition duration-300 w-full md:w-auto text-center">Contact</a>
+                
+                <div class="user-actions mt-4 md:mt-0 md:ml-8 w-full md:w-auto flex justify-center">
+                    <button id="navbar-sign-in-button" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-full flex items-center space-x-2 transition duration-300 w-full md:w-auto justify-center">
+                        <i class="fab fa-discord"></i>
+                        <span>Log In</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="hero-section">
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-8 drop-shadow-lg leading-tight">
+            Welcome to Air India Virtual.
+        </h1>
+      
+        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
+    
+        </div>
+    </main>
+
+    <section class="bg-white py-16 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto text-center">
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-6">About Air India Virtual</h2>
+            <p class="text-lg text-gray-700 leading-relaxed max-w-3xl mx-auto">
+                Air India Virtual is a dedicated community for flight simulation enthusiasts who wish to experience the thrill of flying for India's flag carrier, Air India. We strive to provide a realistic and engaging virtual airline experience, offering a vast route network, regular events, and a supportive community for pilots of all skill levels.
+            </p>
+            <p class="text-lg text-gray-700 leading-relaxed max-w-3xl mx-auto mt-4">
+                Our mission is to foster a passion for aviation, promote learning, and create a fun and challenging environment where virtual pilots can hone their skills and share their love for flying.
+            </p>
+        </div>
+    </section>
+
+    <section class="bg-gray-200 py-16 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto text-center">
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-10">Our Fleet</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
+                    <img src="https://ik.imagekit.io/hswtnwf8i/Screenshot_2025-02-19_at_3.32.49_AM2.png_ex=68a949db&is=68a7f85b&hm=4100739cda48d86e0d5608381b74caf9e07fc8ce7484bd17f7d7756f1ff9a1dc&?updatedAt=1755857710393" alt="Boeing 777" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Boeing 777</h3>
+                        <p class="text-gray-700 text-sm">Our long-haul workhorse, perfect for international flights.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
+                    <img src="https://ik.imagekit.io/hswtnwf8i/Screenshot_2025-02-19_at_3.32.49_AM2_copy.png_ex=68a949df&is=68a7f85f&hm=4ac39e99c0b2c93df1d42abc436da57f6329982459be2247a73c0ddde8d572ac&?updatedAt=1755857708541" alt="Airbus A320" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Airbus A320</h3>
+                        <p class="text-gray-700 text-sm">Ideal for domestic and short-haul international routes.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
+                    <img src="https://ik.imagekit.io/hswtnwf8i/Screenshot_2025-02-19_at_3.32.49_AM1.png_ex=68a94ddb&is=68a7fc5b&hm=fe7079e66ac224d777803b130a5047a641ebe8b638c5fdae046527a824f1d0f6&?updatedAt=1755857709302" alt="Boeing 787" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Airbus A350-900</h3>
+                        <p class="text-gray-700 text-sm">Modern and efficient, for medium to long-range operations.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-white py-16 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto text-center">
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-10">Latest News & Updates</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-gray-50 rounded-lg shadow-md p-6 text-left">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">New Chief Executive Officer!</h3>
+                    <p class="text-gray-600 text-sm mb-4">July 28, 2025</p>
+                    <p class="text-gray-700 leading-relaxed">
+                        We're excited to announce our new CEO Mr. <a href="https://discord.com/users/458787021482098698/">Captain Ved.</a> he will ensure everything runs smoothly as we grow this virtual airline into something truly special.
+                    </p>
+                    <a href="https://discord.com/channels/1341011891941670912/1341015048855748619/1399232294019010591" class="text-red-700 hover:text-red-800 font-semibold mt-4 inline-block">Read More &rarr;</a>
+                </div>
+                <div class="bg-gray-50 rounded-lg shadow-md p-6 text-left">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Partnerships expands</h3>
+                    <p class="text-gray-600 text-sm mb-4">July 30, 2025</p>
+                    <p class="text-700 leading-relaxed">
+                        Air India Virtual is now expanding through partnerships with other virtual airlines. This will allow us to offer more routes and better services to our pilots.
+                    </p>
+                    <a href="https://discord.com/channels/1341011891941670912/1341015963361083453" class="text-red-700 hover:text-red-800 font-semibold mt-4 inline-block">Read More &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-logo-section">
+                    <img src="https://content.presspage.com/uploads/2888/bc5da954-aa70-43ba-9176-708c2fd4fce7/1920_airindialogo.jpg?10000" alt="Air Canada Rouge Virtual Logo" class="footer-logo" />
+                    <div class="footer-social">
+                        <a href="https://discord.gg/C6X2NYRVTe" class="social-icon" aria-label="Discord">
+                            <img src="https://www.svgrepo.com/show/353655/discord-icon.svg" alt="Discord" />
+                        </a>
+                    </div>
+                </div>
+
+                  
+
+            <div class="copyright-bar">
+                <p>
+                    © 2025 Air India Virtual. This is a virtual community and is not affiliated with Air India or any real-world airline. All rights reserved.
+                 
+                </p>
+        
+            </div>
+        </footer>
+
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            
+            <h2 class="text-2xl font-bold mb-4">Login to Air India Virtual</h2>
+            <p class="text-gray-700 mb-4">Please type "read" below to enable the login button and proceed.</p>
+            <input type="text" id="readInput" placeholder="Type 'read' here" class="p-2 border border-gray-300 rounded-md w-full mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <a id="modalLoginButton" href="#" class="modal-login-button">
+                <i class="fab fa-discord"></i>
+                <span>Login with Discord</span>
+            </a>
+            <div id="modalCreatorAlert" class="mt-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                <strong class="font-bold">Important:</strong>
+                <span class="block sm:inline">You must type "read" above to enable the login button.</span>
+            </div>
+        </div>
+    </div>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
