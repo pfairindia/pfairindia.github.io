@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Air India Virtual</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome for Discord icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
  <link rel="icon" href="https://ik.imagekit.io/hswtnwf8i/When_youre_on_the_go_get_important_updates_all_in_one_place__check-in_reminders_gate_announcements_live_departure_updates_and_baggage_carousel_details__You...-removebg-preview.png_ex=68a9158c&is=68a7c40c&hm=f4f6d948c6ffb05367359bb3376ab02398c91064561df3f1596f1dfc3c493093&?updatedAt=1755857790789" type="image/png">
     <style>
@@ -41,33 +39,6 @@
         .btn-gradient:hover {
             background: linear-gradient(to right, #cd1e1a, #e3342f);
         }
-
-        /* Loading Screen Styles */
-        #loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #a6a6a6; /* White background for loader */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999; /* Ensure it's on top of everything */
-            transition: opacity 0.5s ease-out;
-            opacity: 1;
-        }
-        #loading-screen.hidden {
-            opacity: 0;
-            pointer-events: none; /* Disable interaction when hidden */
-        }
-        /* Loader GIF Size Fix */
-        #loading-screen img {
-            width: 1500px; /* Make GIF larger */
-            height: 1500px; /* Make GIF larger */
-            object-fit: contain; /* Ensure the whole GIF is visible */
-        }
-
 
         /* Login Modal Styles */
         .modal {
@@ -366,33 +337,24 @@
 </head>
 <body class="bg-gray-100">
 
-    <!-- Loading Screen -->
-
-    <!-- Navbar -->
     <nav class="bg-red-700 p-4 shadow-lg w-full fixed top-0 z-50">
         <div class="container mx-auto flex flex-col md:flex-row items-center justify-between">
-            <!-- Logo/Brand -->
             <div class="flex items-center justify-between w-full md:w-auto">
-                <!-- Air India Logo -->
                 <img src="https://ik.imagekit.io/hswtnwf8i/When_youre_on_the_go_get_important_updates_all_in_one_place__check-in_reminders_gate_announcements_live_departure_updates_and_baggage_carousel_details__You...-removebg-preview.png_ex=68a9158c&is=68a7c40c&hm=f4f6d948c6ffb05367359bb3376ab02398c91064561df3f1596f1dfc3c493093&?updatedAt=1755857790789" alt="Air India Logo" class="h-10 w-10 mr-2 rounded-full">
                 <a href="#" class="text-white text-2xl font-bold rounded-lg p-2 hover:bg-red-800 transition duration-300">Air India Virtual</a>
-                <!-- Hamburger menu for mobile -->
                 <button id="menu-button" class="text-white text-2xl md:hidden focus:outline-none">
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
 
-            <!-- Navigation Links -->
             <div id="nav-links" class="hidden md:flex flex-col md:flex-row md:space-x-8 mt-4 md:mt-0 items-center w-full md:w-auto">
                 <a href="#" class="text-white px-3 py-2 rounded-md text-lg font-medium hover:bg-red-800 transition duration-300 w-full md:w-auto text-center">Home</a>
-                <a href="#" class="text-white px-3 py-2 rounded-md text-lg font-medium hover:bg-red-800 transition duration-300 w-full md:w-auto text-center">Flights</a>
-                <a href="#" class="text-white px-3 py-2 rounded-md text-lg font-medium hover:bg-red-800 transition duration-300 w-full md:w-auto text-center">Pilots</a>
-                <a href="#" class="text-white px-3 py-2 rounded-md text-lg font-medium hover:bg-red-800 transition duration-300 w-full md:w-auto text-center">Book flights</a>
-                <a href="#" class="text-white px-3 py-2 rounded-md text-lg font-medium hover:bg-red-800 transition duration-300 w-full md:w-auto text-center">Contact</a>
+                <a href="https://pfairindia.github.io/src/error%20catch/404page.html" class="text-white px-3 py-2 rounded-md text-lg font-medium hover:bg-red-800 transition duration-300 w-full md:w-auto text-center">Flights</a>
+                <a href="https://pfairindia.github.io/src/error%20catch/404page.html" class="text-white px-3 py-2 rounded-md text-lg font-medium hover:bg-red-800 transition duration-300 w-full md:w-auto text-center">Pilots</a>
+                <a href="fb.html" class="text-white px-3 py-2 rounded-md text-lg font-medium hover:bg-red-800 transition duration-300 w-full md:w-auto text-center">Book flights</a>
+                <a href="https://discord.com/channels/1341011891941670912/1341016185486970995" class="text-white px-3 py-2 rounded-md text-lg font-medium hover:bg-red-800 transition duration-300 w-full md:w-auto text-center">Contact</a>
                 
-                <!-- Sign In Button / User Actions -->
                 <div class="user-actions mt-4 md:mt-0 md:ml-8 w-full md:w-auto flex justify-center">
-                    <!-- This will be populated by JavaScript -->
                     <button id="navbar-sign-in-button" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-full flex items-center space-x-2 transition duration-300 w-full md:w-auto justify-center">
                         <i class="fab fa-discord"></i>
                         <span>Log In</span>
@@ -402,7 +364,6 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <main class="hero-section">
         <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-8 drop-shadow-lg leading-tight">
             Welcome to Air India Virtual.
@@ -413,7 +374,6 @@
         </div>
     </main>
 
-    <!-- About Us Section -->
     <section class="bg-white py-16 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto text-center">
             <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-6">About Air India Virtual</h2>
@@ -426,12 +386,10 @@
         </div>
     </section>
 
-    <!-- Our Fleet Section -->
     <section class="bg-gray-200 py-16 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto text-center">
             <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-10">Our Fleet</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Aircraft Card 1 -->
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
                     <img src="https://ik.imagekit.io/hswtnwf8i/Screenshot_2025-02-19_at_3.32.49_AM2.png_ex=68a949db&is=68a7f85b&hm=4100739cda48d86e0d5608381b74caf9e07fc8ce7484bd17f7d7756f1ff9a1dc&?updatedAt=1755857710393" alt="Boeing 777" class="w-full h-48 object-cover">
                     <div class="p-6">
@@ -439,7 +397,6 @@
                         <p class="text-gray-700 text-sm">Our long-haul workhorse, perfect for international flights.</p>
                     </div>
                 </div>
-                <!-- Aircraft Card 2 -->
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
                     <img src="https://ik.imagekit.io/hswtnwf8i/Screenshot_2025-02-19_at_3.32.49_AM2_copy.png_ex=68a949df&is=68a7f85f&hm=4ac39e99c0b2c93df1d42abc436da57f6329982459be2247a73c0ddde8d572ac&?updatedAt=1755857708541" alt="Airbus A320" class="w-full h-48 object-cover">
                     <div class="p-6">
@@ -447,7 +404,6 @@
                         <p class="text-gray-700 text-sm">Ideal for domestic and short-haul international routes.</p>
                     </div>
                 </div>
-                <!-- Aircraft Card 3 -->
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
                     <img src="https://ik.imagekit.io/hswtnwf8i/Screenshot_2025-02-19_at_3.32.49_AM1.png_ex=68a94ddb&is=68a7fc5b&hm=fe7079e66ac224d777803b130a5047a641ebe8b638c5fdae046527a824f1d0f6&?updatedAt=1755857709302" alt="Boeing 787" class="w-full h-48 object-cover">
                     <div class="p-6">
@@ -459,12 +415,10 @@
         </div>
     </section>
 
-    <!-- News & Updates Section -->
     <section class="bg-white py-16 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto text-center">
             <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-10">Latest News & Updates</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- News Article 1 -->
                 <div class="bg-gray-50 rounded-lg shadow-md p-6 text-left">
                     <h3 class="text-xl font-semibold text-gray-900 mb-2">New Chief Executive Officer!</h3>
                     <p class="text-gray-600 text-sm mb-4">July 28, 2025</p>
@@ -473,7 +427,6 @@
                     </p>
                     <a href="https://discord.com/channels/1341011891941670912/1341015048855748619/1399232294019010591" class="text-red-700 hover:text-red-800 font-semibold mt-4 inline-block">Read More &rarr;</a>
                 </div>
-                <!-- News Article 2 -->
                 <div class="bg-gray-50 rounded-lg shadow-md p-6 text-left">
                     <h3 class="text-xl font-semibold text-gray-900 mb-2">Partnerships expands</h3>
                     <p class="text-gray-600 text-sm mb-4">July 30, 2025</p>
@@ -486,9 +439,7 @@
         </div>
     </section>
 
-    <!-- Footer -->
-   
-        <footer class="footer">
+    <footer class="footer">
             <div class="footer-content">
                 <div class="footer-logo-section">
                     <img src="https://content.presspage.com/uploads/2888/bc5da954-aa70-43ba-9176-708c2fd4fce7/1920_airindialogo.jpg?10000" alt="Air Canada Rouge Virtual Logo" class="footer-logo" />
@@ -510,7 +461,6 @@
             </div>
         </footer>
 
-    <!-- Login Modal -->
     <div id="loginModal" class="modal">
         <div class="modal-content">
             
@@ -541,23 +491,8 @@
         const userActionsDiv = document.querySelector(".user-actions");
         const loginModal = document.getElementById("loginModal");
         const modalLoginButton = document.getElementById("modalLoginButton");
-        const loadingScreen = document.getElementById('loading-screen');
         const modalCreatorAlert = document.getElementById('modalCreatorAlert');
         const readInput = document.getElementById('readInput');
-
-        /**
-         * Hides the loading screen.
-         * This function runs when the browser's 'load' event fires.
-         */
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                loadingScreen.classList.add('hidden');
-                document.body.style.overflowY = 'auto'; // Re-enable scroll after loading
-            }, 1000); // Loading screen visible for 1 second
-        });
-
-        // Initially hide scrollbar while loading to prevent content flash
-        document.body.style.overflowY = 'hidden';
 
         /**
          * Displays user information (avatar, username) and a logout button.
