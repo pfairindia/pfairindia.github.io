@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Air India Virtual - Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0F172A; /* Slate-900 */
+            color: #E2E8F0; /* Slate-200 */
+            scroll-behavior: smooth;
+        }
+
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #0F172A;
+            padding: 1rem;
+        }
+
+        .login-card {
+            background-color: rgba(30, 41, 59, 0.8); /* Slate-800 with opacity */
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(71, 85, 105, 0.5); /* Slate-600 */
+        }
+
+        .input-field {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid transparent;
+            color: #FFFFFF;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #DC2626; /* Red-600 */
+            box-shadow: 0 0 0 2px #DC2626;
+        }
+
+        .input-field::placeholder {
+            color: #A0AEC0; /* Slate-400 */
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #DC2626, #EF4444); /* Red gradient */
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(220, 38, 38, 0.4);
+        }
+
+        .dashboard-container {
+            min-height: 100vh;
+            background-color: #0F172A;
+            padding: 2rem;
+        }
+
+        .dashboard-header {
+            background-color: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(8px);
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border: 1px solid rgba(71, 85, 105, 0.5);
+        }
+
+        .dashboard-table th, .dashboard-table td {
+            white-space: nowrap;
+        }
+
+        .dashboard-table thead th {
+            background-color: #1E293B;
+            color: #94A3B8; /* Slate-400 */
+            text-transform: uppercase;
+        }
+
+        .dashboard-table tbody tr:nth-child(odd) {
+            background-color: #1E293B;
+        }
+        .dashboard-table tbody tr:nth-child(even) {
+            background-color: #151A2C;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="fixed inset-0 bg-slate-900 bg-opacity-95 flex flex-col justify-center items-center z-[1001] transition-opacity duration-300">
+        <div class="loader-gif">
+            <img src="https://i.imgur.com/uR1Q2qW.gif" alt="Loading..." class="w-24 h-24">
+        </div>
+        <p class="mt-4 text-slate-300">Connecting to Firebase...</p>
+    </div>
+
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="login-card w-full max-w-sm mx-auto rounded-xl p-8 shadow-2xl">
+            <h1 class="text-3xl text-center font-extrabold text-white mb-6">Admin Login</h1>
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <label for="email" class="block text-slate-300 font-medium mb-1">Email</label>
+                    <input type="email" id="email" required class="input-field w-full p-3 rounded-md focus:ring-2 focus:ring-red-600">
+                </div>
+                <div>
+                    <label for="password" class="block text-slate-300 font-medium mb-1">Password</label>
+                    <input type="password" id="password" required class="input-field w-full p-3 rounded-md focus:ring-2 focus:ring-red-600">
+                </div>
+                <button type="submit" class="btn-primary w-full p-3 rounded-md text-white font-bold text-lg">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard Page -->
+    <div id="dashboardPage" class="hidden dashboard-container">
+        <header class="dashboard-header sticky top-0 z-40 py-4 px-6 flex justify-between items-center rounded-b-lg mb-6">
+            <div class="flex items-center space-x-3">
+                <i class="fas fa-plane text-red-500 text-3xl"></i>
+                <h1 class="text-2xl font-bold text-white">Air India Virtual Admin</h1>
+            </div>
+            <button id="logoutBtn" class="bg-red-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-red-700 transition-colors">Logout</button>
+        </header>
+
+        <main class="max-w-7xl mx-auto">
+            <h2 class="text-2xl font-semibold mb-4 text-slate-100">Flight Bookings</h2>
+            <p id="accessDenied" class="hidden text-center text-red-400 font-medium text-lg mb-4">Access Denied: Your account is not authorized to view this dashboard.</p>
+            <div id="tableContainer" class="table-container bg-slate-800 rounded-lg shadow-lg">
+                <table class="dashboard-table w-full text-left text-sm text-slate-300">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="py-3 px-6">Discord Username</th>
+                            <th scope="col" class="py-3 px-6">Origin</th>
+                            <th scope="col" class="py-3 px-6">Destination</th>
+                            <th scope="col" class="py-3 px-6">Departure Date</th>
+                            <th scope="col" class="py-3 px-6">Return Date</th>
+                            <th scope="col" class="py-3 px-6">Passengers</th>
+                            <th scope="col" class="py-3 px-6">Booking Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bookingsTableBody">
+                        <!-- Bookings will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Custom Message Box -->
+    <div id="messageBoxOverlay" class="fixed inset-0 bg-slate-900 bg-opacity-70 backdrop-blur-sm flex items-center justify-center hidden z-[1002]">
+        <div id="messageBoxContent" class="bg-slate-800 text-slate-100 rounded-lg p-8 shadow-2xl max-w-sm text-center">
+            <h3 id="messageBoxTitle" class="text-2xl font-bold text-red-500 mb-4"></h3>
+            <p id="messageBoxText" class="mb-6"></p>
+            <button id="messageBoxCloseButton" class="px-6 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors">Got It!</button>
+        </div>
+    </div>
+
+    <script type="module">
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAdN6__6BSVsaS6K3F0qcF8ThnGH3r0GcM",
+            authDomain: "airindiavirtualpf.firebaseapp.com",
+            projectId: "airindiavirtualpf",
+            storageBucket: "airindiavirtualpf.firebasestorage.app",
+            messagingSenderId: "418511928890",
+            appId: "1:418511928890:web:3eeab7ba6c5312d9f4bf03",
+            measurementId: "G-VRB609NTRL"
+        };
+        
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, query, onSnapshot, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        // --- Globals from Canvas ---
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfigFromCanvas = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : firebaseConfig;
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        // --- AUTHORIZED ADMIN UID ---
+        const ALLOWED_USER_UID = 'PBztJu72hSfbQEDl6VdvEzmyIko2';
+
+        const loginPage = document.getElementById('loginPage');
+        const dashboardPage = document.getElementById('dashboardPage');
+        const loginForm = document.getElementById('loginForm');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const bookingsTableBody = document.getElementById('bookingsTableBody');
+        const accessDeniedMsg = document.getElementById('accessDenied');
+        const loadingScreen = document.getElementById('loading-screen');
+        
+        const messageBoxOverlay = document.getElementById('messageBoxOverlay');
+        const messageBoxContent = document.getElementById('messageBoxContent');
+        const messageBoxTitle = document.getElementById('messageBoxTitle');
+        const messageBoxText = document.getElementById('messageBoxText');
+        const messageBoxCloseButton = document.getElementById('messageBoxCloseButton');
+
+        let app;
+        let db;
+        let auth;
+        let unsubscribe;
+
+        function showMessageBox(title, message) {
+            messageBoxTitle.textContent = title;
+            messageBoxText.textContent = message;
+            messageBoxOverlay.style.display = 'flex';
+        }
+
+        function hideMessageBox() {
+            messageBoxOverlay.style.display = 'none';
+        }
+
+        function showUI(pageId) {
+            loginPage.classList.add('hidden');
+            dashboardPage.classList.add('hidden');
+            document.getElementById(pageId).classList.remove('hidden');
+        }
+
+        function formatBookingDate(timestamp) {
+            const date = new Date(timestamp);
+            const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        function renderBookings(bookings) {
+            bookingsTableBody.innerHTML = '';
+            if (bookings.length === 0) {
+                bookingsTableBody.innerHTML = '<tr><td colspan="7" class="py-4 text-center text-slate-400">No bookings found.</td></tr>';
+                return;
+            }
+            bookings.forEach(booking => {
+                const row = `
+                    <tr class="border-b border-slate-700">
+                        <td class="py-3 px-6">${booking.userId}</td>
+                        <td class="py-3 px-6">${booking.origin}</td>
+                        <td class="py-3 px-6">${booking.destination}</td>
+                        <td class="py-3 px-6">${booking.departureDate}</td>
+                        <td class="py-3 px-6">${booking.returnDate}</td>
+                        <td class="py-3 px-6">${booking.passengers}</td>
+                        <td class="py-3 px-6">${formatBookingDate(booking.bookingTimestamp)}</td>
+                    </tr>
+                `;
+                bookingsTableBody.innerHTML += row;
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Initialize Firebase
+                app = initializeApp(firebaseConfigFromCanvas);
+                db = getFirestore(app);
+                auth = getAuth(app);
+            } catch (e) {
+                console.error("Error initializing Firebase:", e);
+                return;
+            }
+
+            // Authentication state listener
+            onAuthStateChanged(auth, (user) => {
+                loadingScreen.classList.add('hidden');
+                if (user) {
+                    if (user.uid === ALLOWED_USER_UID) {
+                        showUI('dashboardPage');
+                        accessDeniedMsg.classList.add('hidden');
+                        
+                        // Listen for real-time booking data
+                        const bookingsCollectionRef = collection(db, `/artifacts/${appId}/public/data/flight_bookings`);
+                        const q = query(bookingsCollectionRef);
+
+                        unsubscribe = onSnapshot(q, (querySnapshot) => {
+                            const bookings = [];
+                            querySnapshot.forEach((doc) => {
+                                bookings.push(doc.data());
+                            });
+                            
+                            // Sort bookings by timestamp descending (most recent first)
+                            bookings.sort((a, b) => new Date(b.bookingTimestamp) - new Date(a.bookingTimestamp));
+                            renderBookings(bookings);
+                        }, (error) => {
+                            console.error("Error fetching bookings:", error);
+                            renderBookings([]);
+                        });
+                    } else {
+                        // Not the authorized user
+                        showUI('dashboardPage');
+                        accessDeniedMsg.classList.remove('hidden');
+                        bookingsTableBody.innerHTML = '';
+                        if (unsubscribe) {
+                            unsubscribe();
+                        }
+                    }
+                } else {
+                    // Not logged in
+                    showUI('loginPage');
+                    if (unsubscribe) {
+                        unsubscribe();
+                    }
+                }
+            });
+
+            // Login form submission
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                try {
+                    await signInWithEmailAndPassword(auth, email, password);
+                } catch (error) {
+                    let errorMessage = "An error occurred during login. Please try again.";
+                    if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                        errorMessage = "Invalid email or password.";
+                    }
+                    showMessageBox("Login Failed", errorMessage);
+                }
+            });
+
+            // Logout logic
+            logoutBtn.addEventListener('click', async () => {
+                try {
+                    await signOut(auth);
+                } catch (error) {
+                    console.error("Error signing out:", error);
+                    showMessageBox("Logout Error", "Failed to log out. Please try again.");
+                }
+            });
+
+            messageBoxCloseButton.addEventListener('click', hideMessageBox);
+        });
+    </script>
+</body>
+</html>
