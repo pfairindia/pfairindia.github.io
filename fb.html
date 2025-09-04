@@ -3,141 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Air India Virtual - Book Your Dream Flight</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Air India Virtual - Book a Flight</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            margin: 0;
-            padding: 0;
+            background-color: #0F172A;
+            color: #E2E8F0;
             overflow-x: hidden;
-            background-color: #0F172A; /* Dark blue-gray for the page background */
-            color: #E2E8F0; /* Light text color */
-        }
-        
-        /* Global Styles for headings */
-        h1, h2, h3, h4 {
-            font-family: 'Inter', sans-serif;
-            font-weight: 800;
-            color: #F8FAFC; /* Off-white for headings */
+            scroll-behavior: smooth;
         }
 
-        /* Hero section with a beautiful background image */
         .booking-hero-new {
-            background-image: url('https://ik.imagekit.io/hswtnwf8i/Screenshot_2025-02-17_at_3.35.17_PM.png_ex=68a968be&is=68a8173e&hm=1923315b45fe33c5df76a25bd0d73e13da551dcc8dbc8ce25af9af43dad86cdb&?updatedAt=1755857710984'); /* High-quality night interior placeholder */
+            background-image: url('https://placehold.co/1920x1080/4B0082/FFFFFF?text=Air+India+Plane+Interior+Night');
             background-size: cover;
             background-position: center;
-            background-attachment: fixed; /* Parallax effect */
-            min-height: 100vh; /* Full viewport height */
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background-attachment: fixed;
             position: relative;
-            z-index: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1rem;
         }
-        .booking-hero-new::before {
+
+        .booking-hero-new::after {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.4)); /* Dark, subtle gradient overlay */
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.6) 0%, rgba(15, 23, 42, 0.9) 100%);
             z-index: 1;
         }
 
-        /* Form Container - Central, elegant card */
         .form-card-new {
-            background-color: rgba(255, 255, 255, 0.08); /* Semi-transparent white */
-            backdrop-filter: blur(10px); /* Frosted glass effect */
-            border-radius: 1.5rem;
+            background-color: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-            padding: 3rem 2.5rem;
-            max-width: 600px;
-            width: 90%;
-            position: relative;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
             z-index: 2;
-            text-align: center;
-        }
-        .form-card-new h2 {
-            font-weight: 900;
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            color: #F8FAFC;
         }
 
-        /* Input Fields */
         .input-field-new {
-            background-color: rgba(255, 255, 255, 0.15); /* Lighter transparent input */
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #F8FAFC;
-            padding: 1rem 1.25rem;
-            border-radius: 0.75rem;
-            font-size: 1rem;
-            transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid transparent;
+            color: #FFFFFF;
+            transition: all 0.2s ease-in-out;
         }
-        .input-field-new::placeholder {
-            color: #CBD5E1; /* Light gray placeholder */
-        }
+
         .input-field-new:focus {
             outline: none;
-            border-color: #EF4444; /* Air India red on focus */
-            background-color: rgba(255, 255, 255, 0.25);
-            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.3);
-        }
-        /* Style for date inputs (webkits) to ensure consistency */
-        .input-field-new[type="date"]::-webkit-calendar-picker-indicator {
-            filter: invert(1); /* Makes the calendar icon white */
-            cursor: pointer;
-        }
-        .input-field-new[type="date"] {
-            color: #F8FAFC; /* Ensure date text is white */
-        }
-        /* Style for select dropdown arrows (webkits) */
-        .input-field-new.select-arrow {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            background-color: #DC2626;
-            background-repeat: no-repeat;
-            background-position: right 0.75rem center;
-            background-size: 1em;
-            padding-right: 2.5rem; /* Make space for the arrow */
-        }
-        .input-field-new option {
-            background-color: #0F172A; /* Dark background for dropdown options */
-            color: #F8FAFC;
+            border-color: #DC2626;
+            box-shadow: 0 0 0 2px #DC2626;
         }
 
-        /* Submit Button - Air India Red Gradient, Animated */
+        .input-field-new::placeholder {
+            color: #A0AEC0;
+        }
+
         .btn-submit-new {
-            background: linear-gradient(90deg, #EF4444, #DC2626); /* Red gradient */
-            color: white;
-            padding: 1rem 2.5rem;
-            border-radius: 9999px; /* Pill shape */
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+            background: linear-gradient(to right, #DC2626, #EF4444);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
         }
+
         .btn-submit-new:hover:not(:disabled) {
-            transform: translateY(-5px) scale(1.03);
-            box-shadow: 0 12px 30px rgba(239, 68, 68, 0.6);
-            background: linear-gradient(90deg, #DC2626, #EF4444); /* Reverse gradient on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(220, 38, 38, 0.4);
         }
+
         .btn-submit-new:disabled {
-            background: rgba(100, 116, 139, 0.6); /* Grayed out, semi-transparent */
+            background: #4B5563;
             cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
         }
-        
-        /* Message Box Styling - Minimalist and integrated */
+
         .message-box-overlay {
             position: fixed;
             top: 0;
@@ -145,315 +86,304 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            backdrop-filter: blur(5px);
             z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-        .message-box-overlay.show {
-            opacity: 1;
-            visibility: visible;
-        }
-        .message-box-content {
-            background-color: #1A202C; /* Dark background */
-            padding: 2.5rem;
-            border-radius: 1rem;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-            max-width: 450px;
-            width: 90%;
-            transform: translateY(-20px);
-            opacity: 0;
-            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .message-box-overlay.show .message-box-content {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        .message-box-content h3 {
-            color: #EF4444; /* Red for title */
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-        }
-        .message-box-content p {
-            color: #CBD5E1; /* Light gray for message */
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 2rem;
-        }
-        .message-box-content button {
-            background: linear-gradient(90deg, #60A5FA, #3B82F6); /* Blue gradient for close button */
-            color: white;
-            padding: 0.75rem 2rem;
-            border-radius: 9999px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
-        }
-        .message-box-content button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
-            background: linear-gradient(90deg, #3B82F6, #60A5FA);
+            display: none;
         }
 
-        /* Discord Login Message (When not logged in) */
-        .discord-login-required-message {
-            background-color: rgba(239, 68, 68, 0.15); /* Light red, semi-transparent */
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #F8FAFC; /* White text */
-            padding: 1.25rem;
-            border-radius: 0.75rem;
-            margin-bottom: 1.5rem;
+        .message-box-content {
+            background-color: #1F2937;
+            color: #F9FAFB;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
             text-align: center;
-            font-weight: 500;
-            display: none; /* Hidden by default, shown by JS */
         }
-        .discord-login-required-message a {
-            color: #60A5FA; /* Blue link */
-            text-decoration: underline;
-            font-weight: 600;
-        }
-        .discord-login-required-message.show {
-            display: block;
+
+        .message-box-content h3 {
+            color: #DC2626;
         }
     </style>
 </head>
-<body class="bg-darkblue text-lightgray">
-
+<body class="antialiased">
+    <!-- Navbar -->
+    <nav class="fixed top-0 left-0 right-0 p-4 sm:p-6 bg-slate-900 bg-opacity-70 backdrop-blur-sm flex justify-between items-center z-50">
+        <div class="flex items-center space-x-3 sm:space-x-4">
+            <!-- User Avatar -->
+            <img id="user-avatar" src="https://via.placeholder.com/48" alt="User Avatar" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-slate-300">
+            <!-- User Name -->
+            <span id="user-name" class="text-white text-lg sm:text-xl font-semibold">Guest</span>
+        </div>
+        
+        <!-- Home Button -->
+        <a href="index.html" class="px-4 py-2 sm:px-6 sm:py-3 rounded-full text-sm sm:text-lg font-semibold bg-red-600 hover:bg-red-700 transition-colors duration-200">
+            Home
+        </a>
+    </nav>
+    
     <div class="booking-hero-new">
-        <div class="form-card-new">
-            <h2 class="text-white">Book Your Dream Flight</h2>
-            <p class="text-gray-300 mb-8">Embark on your next virtual adventure with Air India Virtual.</p>
+        <div class="form-card-new p-6 sm:p-8 rounded-2xl w-full max-w-xl mx-auto z-10">
+            <h1 class="text-3xl sm:text-4xl text-center font-bold mb-6 text-white">Book Your Flight</h1>
 
-            <div id="discordLoginMessage" class="discord-login-required-message">
-                You must be logged in with Discord on the <a href="index.html">main page</a> to book a flight.
+            <div id="discordLoginMessage" class="hidden text-center bg-red-800 bg-opacity-30 border border-red-700 rounded-md p-4 mb-6">
+                <p class="text-red-300 font-medium">You must be logged in with Discord to book a flight.</p>
+                <p class="text-sm mt-2">Please go to the <a href="index.html" class="text-red-400 underline hover:text-red-500">home page</a> to log in.</p>
             </div>
-
-            <form id="flightBookingForm" class="space-y-6">
-                <input type="hidden" name="Discord Username" id="discordUsernameHidden">
-
+            
+            <form id="flightBookingForm" class="space-y-4">
+                <input type="hidden" id="discordUsernameHidden">
+                
                 <div>
-                    <label for="origin" class="block text-gray-300 text-sm font-semibold mb-2 text-left">Departure Airport:</label>
-                    <select id="origin" name="Departure Airport" class="input-field-new w-full select-arrow" required>
-                        <option value="" class="text-gray-400">Select Departure Airport</option>
+                    <label for="origin" class="block text-white font-medium mb-1">Origin</label>
+                    <select id="origin" name="origin" required class="input-field-new w-full p-3 rounded-md focus:ring-2 focus:ring-red-600 focus:border-transparent cursor-pointer">
                     </select>
                 </div>
-
+                
                 <div>
-                    <label for="destination" class="block text-gray-300 text-sm font-semibold mb-2 text-left">Arrival Airport:</label>
-                    <select id="destination" name="Arrival Airport" class="input-field-new w-full select-arrow" required>
-                        <option value="" class="text-gray-400">Select Arrival Airport</option>
+                    <label for="destination" class="block text-white font-medium mb-1">Destination</label>
+                    <select id="destination" name="destination" required class="input-field-new w-full p-3 rounded-md focus:ring-2 focus:ring-red-600 focus:border-transparent cursor-pointer">
                     </select>
                 </div>
-
+                
                 <div>
-                    <label for="flight-date" class="block text-gray-300 text-sm font-semibold mb-2 text-left">Departure Date:</label>
-                    <input type="date" id="flight-date" name="Departure Date" class="input-field-new w-full" required>
+                    <label for="departureDate" class="block text-white font-medium mb-1">Departure Date</label>
+                    <input type="date" id="departureDate" name="departureDate" required class="input-field-new w-full p-3 rounded-md focus:ring-2 focus:ring-red-600 focus:border-transparent">
                 </div>
-
+                
                 <div>
-                    <label for="passengers" class="block text-gray-300 text-sm font-semibold mb-2 text-left">Number of Passengers:</label>
-                    <input type="number" id="passengers" name="Number of Passengers" min="1" value="1" class="input-field-new w-full" required>
+                    <label for="returnDate" class="block text-white font-medium mb-1">Return Date (Optional)</label>
+                    <input type="date" id="returnDate" name="returnDate" class="input-field-new w-full p-3 rounded-md focus:ring-2 focus:ring-red-600 focus:border-transparent">
                 </div>
-
+                
                 <div>
-                    <label for="flight-class" class="block text-gray-300 text-sm font-semibold mb-2 text-left">Class:</label>
-                    <select id="flight-class" name="Flight Class" class="input-field-new w-full select-arrow" required>
-                        <option value="Economy">Economy</option>
-                        <option value="Business">Business</option>
-                        <option value="First Class">First Class</option>
-                    </select>
+                    <label for="passengers" class="block text-white font-medium mb-1">Passengers</label>
+                    <input type="number" id="passengers" name="passengers" min="1" value="1" required class="input-field-new w-full p-3 rounded-md focus:ring-2 focus:ring-red-600 focus:border-transparent">
                 </div>
-
-                <div class="flex justify-center pt-4">
-                    <button type="submit" id="submitButton" class="btn-submit-new w-full">
-                        Submit Booking
-                    </button>
-                </div>
+                
+                <button type="submit" id="submitBookingBtn" class="btn-submit-new w-full p-3 rounded-md text-white font-bold text-lg mt-6">Submit Booking</button>
             </form>
         </div>
     </div>
 
-    <!-- Custom Message Box for errors and alerts -->
-    <div id="messageBoxOverlay" class="message-box-overlay">
-        <div class="message-box-content">
-            <h3 id="messageBoxTitle"></h3>
-            <p id="messageBoxText"></p>
-            <button id="messageBoxCloseButton">Got It!</button>
+    <!-- Custom Message Box -->
+    <div id="messageBoxOverlay" class="message-box-overlay flex items-center justify-center">
+        <div id="messageBoxContent" class="message-box-content p-6 rounded-lg shadow-xl relative z-50">
+            <h3 id="messageBoxTitle" class="text-2xl font-bold mb-4"></h3>
+            <p id="messageBoxText" class="text-sm sm:text-base mb-6"></p>
+            <button id="messageBoxCloseButton" class="px-6 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors duration-200 font-bold">Got It!</button>
         </div>
     </div>
-
-    <!-- Firebase SDKs and script -->
+    
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // Your web app's Firebase configuration
+        // Firebase Configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyD09Wu6-wyIIDKkGi4TKhn4NKax1r7AWUk",
-            authDomain: "flyae-backend.firebaseapp.com",
-            projectId: "flyae-backend",
-            storageBucket: "flyae-backend.firebasestorage.app",
-            messagingSenderId: "610108789668",
-            appId: "1:610108789668:web:ae0d71ab7970b0dbb72731",
-            measurementId: "G-MHQJ6BBW4G"
+            apiKey: "AIzaSyAdN6__6BSVsaS6K3F0qcF8ThnGH3r0GcM",
+            authDomain: "airindiavirtualpf.firebaseapp.com",
+            projectId: "airindiavirtualpf",
+            storageBucket: "airindiavirtualpf.firebasestorage.app",
+            messagingSenderId: "418511928890",
+            appId: "1:418511928890:web:3eeab7ba6c5312d9f4bf03",
+            measurementId: "G-VRB609NTRL"
         };
         
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        
+        // --- Globals from Canvas ---
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfigFromCanvas = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : firebaseConfig;
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        let app;
+        let db;
+        let auth;
+        let userId = null;
+
         // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        function initializeFirebase() {
+            try {
+                app = initializeApp(firebaseConfigFromCanvas);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                console.log("Firebase initialized successfully.");
 
-        // Your Discord Client ID from the Discord Developer Portal (used for main page, but kept for consistency)
-        const CLIENT_ID = "1408133830690209872";
-        // The Redirect URI for the main page (kept for consistency)
-        const MAIN_REDIRECT_URI = "https://pfairindia.github.io"; 
+                // Sign in with custom token or anonymously
+                if (initialAuthToken) {
+                    signInWithCustomToken(auth, initialAuthToken).catch((error) => {
+                        console.error("Custom token sign-in failed, signing in anonymously.", error);
+                        signInAnonymously(auth).catch((anonError) => {
+                            console.error("Anonymous sign-in failed.", anonError);
+                        });
+                    });
+                } else {
+                    signInAnonymously(auth).catch((error) => {
+                        console.error("Anonymous sign-in failed.", error);
+                    });
+                }
 
-        // Get form elements
-        const flightBookingForm = document.getElementById('flightBookingForm');
-        const originSelect = document.getElementById('origin');
-        const destinationSelect = document.getElementById('destination');
-        const flightDateInput = document.getElementById('flight-date');
-        const passengersInput = document.getElementById('passengers');
-        const submitButton = document.getElementById('submitButton');
-        const discordUsernameHidden = document.getElementById('discordUsernameHidden');
-        const discordLoginMessage = document.getElementById('discordLoginMessage');
+                // Listen for auth state changes
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        console.log("Firebase user authenticated with UID:", userId);
+                    } else {
+                        userId = null;
+                        console.log("Firebase user is signed out.");
+                    }
+                });
 
-        // Custom Message Box Elements
-        const messageBoxOverlay = document.getElementById('messageBoxOverlay');
-        const messageBoxTitle = document.getElementById('messageBoxTitle');
-        const messageBoxText = document.getElementById('messageBoxText');
-        const messageBoxCloseButton = document.getElementById('messageBoxCloseButton');
-
-        // Function to show custom message box
-        function showMessageBox(title, message) {
-            messageBoxTitle.textContent = title;
-            messageBoxText.textContent = message;
-            messageBoxOverlay.classList.add('show');
-        }
-
-        // Function to hide custom message box
-        messageBoxCloseButton.addEventListener('click', () => {
-            messageBoxOverlay.classList.remove('show');
-        });
-        messageBoxOverlay.addEventListener('click', (event) => {
-            if (event.target === messageBoxOverlay) {
-                messageBoxOverlay.classList.remove('show');
+            } catch (e) {
+                console.error("Error initializing Firebase:", e);
+                alert("Error initializing Firebase. See console for details.");
             }
-        });
-
-        // Function to disable/enable the booking form
-        function setFormEnabled(enabled) {
-            const formElements = flightBookingForm.querySelectorAll('input, select, button');
-            formElements.forEach(element => {
-                element.disabled = !enabled;
-            });
-            submitButton.disabled = !enabled; // Explicitly disable submit button
-            if (enabled) {
-                discordLoginMessage.classList.remove('show');
+        }
+        
+        // Function to update the navbar with Discord user info
+        function updateNavbarUser() {
+            const userAvatar = document.getElementById('user-avatar');
+            const userName = document.getElementById('user-name');
+            const savedUser = JSON.parse(localStorage.getItem('discordUser'));
+            
+            if (savedUser) {
+                const avatarUrl = savedUser.avatar ? `https://cdn.discordapp.com/avatars/${savedUser.id}/${savedUser.avatar}.png` : 'https://discord.com/assets/f135b1fcd3d2c4935480d19e910540d5.png';
+                userAvatar.src = avatarUrl;
+                userName.textContent = savedUser.username;
             } else {
-                discordLoginMessage.classList.add('show');
+                userAvatar.src = 'https://via.placeholder.com/48';
+                userName.textContent = 'Guest';
             }
-        }
-
-        // List of unique airports
-        const airports = [
-            "Punta Cana", "Cibao", "Gran Canarias", "Larnaca", "Gatwick", "Menorca", "Kittila"
-        ].sort();
-
-        // Populate dropdowns with airport options
-        function populateAirportSelects() {
-            airports.forEach(airport => {
-                const optionOrigin = document.createElement('option');
-                optionOrigin.value = airport;
-                optionOrigin.textContent = airport;
-                originSelect.appendChild(optionOrigin);
-
-                const optionDestination = document.createElement('option');
-                optionDestination.value = airport;
-                optionDestination.textContent = airport;
-                destinationSelect.appendChild(optionDestination);
-            });
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            populateAirportSelects();
+            initializeFirebase();
+            updateNavbarUser();
 
-            // Set min date for flight date to today
-            const today = new Date().toISOString().split('T')[0];
-            flightDateInput.min = today;
+            const flightBookingForm = document.getElementById('flightBookingForm');
+            const submitBookingBtn = document.getElementById('submitBookingBtn');
+            const discordLoginMessage = document.getElementById('discordLoginMessage');
+            const discordUsernameHidden = document.getElementById('discordUsernameHidden');
+            
+            const messageBoxOverlay = document.getElementById('messageBoxOverlay');
+            const messageBoxContent = document.getElementById('messageBoxContent');
+            const messageBoxTitle = document.getElementById('messageBoxTitle');
+            const messageBoxText = document.getElementById('messageBoxText');
+            const messageBoxCloseButton = document.getElementById('messageBoxCloseButton');
 
-            // Check Discord login status from localStorage
-            const savedUser = JSON.parse(localStorage.getItem("discordUser"));
+            // List of airports
+            const airports = [
+                'Punta Cana', 'Cibao', 'Gran Canarias', 'Larnaca', 'Gatwick', 'Menorca', 'Kittila'
+            ];
 
-            if (savedUser && savedUser.username) {
-                // If user is logged in via Discord, populate hidden field and enable form
-                const username = savedUser.discriminator && savedUser.discriminator !== '0'
-                    ? `${savedUser.username}#${savedUser.discriminator}`
-                    : savedUser.username;
-                discordUsernameHidden.value = username;
-                setFormEnabled(true);
-                console.log("Discord user detected:", username, "Form enabled.");
-            } else {
-                // If not logged in via Discord, disable form and show message
-                discordUsernameHidden.value = "Not Logged In";
-                setFormEnabled(false);
-                console.log("No Discord user detected. Form disabled.");
+            function populateAirportSelects() {
+                const originSelect = document.getElementById('origin');
+                const destinationSelect = document.getElementById('destination');
+                
+                airports.forEach(airport => {
+                    const option1 = document.createElement('option');
+                    option1.value = airport;
+                    option1.textContent = airport;
+                    originSelect.appendChild(option1);
+                    
+                    const option2 = document.createElement('option');
+                    option2.value = airport;
+                    option2.textContent = airport;
+                    destinationSelect.appendChild(option2);
+                });
             }
 
-            // --- FORM SUBMISSION LOGIC ---
-            flightBookingForm.addEventListener('submit', async (event) => {
-                event.preventDefault(); // Prevent default form submission
+            function setFormEnabled(enabled) {
+                const formElements = flightBookingForm.querySelectorAll('input, select, button');
+                formElements.forEach(el => {
+                    if (el.type !== 'submit') {
+                        el.disabled = !enabled;
+                    }
+                });
+                submitBookingBtn.disabled = !enabled;
+                if (enabled) {
+                    discordLoginMessage.classList.add('hidden');
+                } else {
+                    discordLoginMessage.classList.remove('hidden');
+                }
+            }
+
+            function showMessageBox(title, message) {
+                messageBoxTitle.textContent = title;
+                messageBoxText.textContent = message;
+                messageBoxOverlay.style.display = 'flex';
+            }
+
+            function hideMessageBox() {
+                messageBoxOverlay.style.display = 'none';
+            }
+
+            // Initial check for Discord user
+            const savedUser = JSON.parse(localStorage.getItem('discordUser'));
+            if (savedUser) {
+                discordUsernameHidden.value = savedUser.username;
+                setFormEnabled(true);
+            } else {
+                setFormEnabled(false);
+            }
+
+            populateAirportSelects();
+            
+            // Validation and Form Submission
+            flightBookingForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
                 
-                // Double-check login status before allowing submission
-                if (discordUsernameHidden.value === "Not Logged In" || submitButton.disabled) {
-                    showMessageBox("Login Required", "You must log in with Discord on the main page to book a flight.");
-                    return;
-                }
-
-                const origin = originSelect.value;
-                const destination = destinationSelect.value;
-                const flightDate = flightDateInput.value;
+                const origin = document.getElementById('origin').value;
+                const destination = document.getElementById('destination').value;
+                const departureDate = document.getElementById('departureDate').value;
+                const returnDate = document.getElementById('returnDate').value;
                 const passengers = document.getElementById('passengers').value;
-                const flightClass = document.getElementById('flight-class').value;
-
-                // Basic validation
-                if (origin === "" || destination === "" || flightDate === "" || passengers === "" || flightClass === "") {
-                    showMessageBox("Validation Error", "Please fill in all flight details.");
-                    return;
-                }
 
                 if (origin === destination) {
-                    showMessageBox("Invalid Route", "Departure and Arrival airports cannot be the same. Please select different airports.");
+                    showMessageBox("Invalid Selection", "Origin and Destination cannot be the same.");
+                    return;
+                }
+
+                if (!discordUsernameHidden.value) {
+                    showMessageBox("Login Required", "You must be logged in with Discord to submit a booking.");
                     return;
                 }
                 
                 const bookingData = {
-                    discordUsername: discordUsernameHidden.value, // Use Discord username as identifier
-                    origin: origin,
-                    destination: destination,
-                    flightDate: flightDate,
+                    userId: discordUsernameHidden.value,
+                    origin,
+                    destination,
+                    departureDate,
+                    returnDate: returnDate || 'N/A',
                     passengers: parseInt(passengers, 10),
-                    flightClass: flightClass,
-                    timestamp: new Date().toISOString()
+                    bookingTimestamp: new Date().toISOString()
                 };
 
                 try {
-                    const appId = typeof __app_id !== 'undefined' ? __app_id : firebaseConfig.projectId;
+                    // Get a reference to the bookings collection
+                    // The path is /artifacts/{appId}/public/data/flight_bookings
                     const bookingsCollectionPath = `/artifacts/${appId}/public/data/flight_bookings`;
                     const bookingsRef = collection(db, bookingsCollectionPath);
                     
+                    // Add the new booking document to Firestore
                     await addDoc(bookingsRef, bookingData);
                     
-                    showMessageBox("Booking Confirmed!", `Your flight from ${origin} to ${destination} has been successfully submitted by ${discordUsernameHidden.value}!`);
-                    flightBookingForm.reset(); // Clear form after successful submission
+                    showMessageBox("Booking Confirmed!", "Your flight booking has been successfully submitted. Thank you for choosing Air India Virtual!");
+                    flightBookingForm.reset();
+                    updateNavbarUser(); // Update navbar after form submission
                 } catch (error) {
                     console.error('Error submitting booking:', error);
                     showMessageBox("Submission Failed", "There was an error submitting your booking. Please try again later.");
+                }
+            });
+
+            // Close message box when button is clicked
+            messageBoxCloseButton.addEventListener('click', hideMessageBox);
+            // Close message box if clicking outside the content
+            messageBoxOverlay.addEventListener('click', (event) => {
+                if (event.target === messageBoxOverlay) {
+                    hideMessageBox();
                 }
             });
         });
