@@ -11,9 +11,13 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0F172A; /* Slate-900 */
-            color: #E2E8F0; /* Slate-200 */
             scroll-behavior: smooth;
+            background-color: #0F172A; /* Slate-900 fallback */
+            color: #E2E8F0; /* Slate-200 */
+            background-image: url('https://ik.imagekit.io/hswtnwf8i/Screenshot_2025-02-17_at_3.18.39_PM.png_ex=68bbbff0&is=68ba6e70&hm=b124c9850586a9fbf783e59deff72d2b4d21d7272bc4f44df2647cf61bc652e3&=&format=webp&quality=lossless&width=1090&height=635?updatedAt=1757081817397');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
         }
 
         .login-container {
@@ -60,8 +64,9 @@
 
         .dashboard-container {
             min-height: 100vh;
-            background-color: #0F172A;
+            background-color: rgba(15, 23, 42, 0.5); /* Darker semi-transparent background for content */
             padding: 2rem;
+            backdrop-filter: blur(5px);
         }
 
         .dashboard-header {
@@ -125,7 +130,7 @@
         <header class="dashboard-header sticky top-0 z-40 py-4 px-6 flex justify-between items-center rounded-b-lg mb-6">
             <div class="flex items-center space-x-3">
                 <i class="fas fa-plane text-red-500 text-3xl"></i>
-                <h1 class="text-2xl font-bold text-white">Air India Virtual Admin</h1>
+                <h1 class="text-2xl font-bold text-white">Air India Virtual Dash.</h1>
             </div>
             <button id="logoutBtn" class="bg-red-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-red-700 transition-colors">Logout</button>
         </header>
@@ -133,7 +138,7 @@
         <main class="max-w-7xl mx-auto">
             <h2 class="text-2xl font-semibold mb-4 text-slate-100">Flight Bookings</h2>
             <p id="accessDenied" class="hidden text-center text-red-400 font-medium text-lg mb-4">Access Denied: Your account is not authorized to view this dashboard.</p>
-            <div id="tableContainer" class="table-container bg-slate-800 rounded-lg shadow-lg">
+            <div id="bookingsTableContainer" class="table-container bg-slate-800 rounded-lg shadow-lg">
                 <table class="dashboard-table w-full text-left text-sm text-slate-300">
                     <thead>
                         <tr>
@@ -144,10 +149,29 @@
                             <th scope="col" class="py-3 px-6">Return Date</th>
                             <th scope="col" class="py-3 px-6">Passengers</th>
                             <th scope="col" class="py-3 px-6">Booking Date</th>
+                            <th scope="col" class="py-3 px-6">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="bookingsTableBody">
                         <!-- Bookings will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <h2 class="text-2xl font-semibold mt-8 mb-4 text-slate-100">Pilot & Management Applications</h2>
+            <div id="applicationsTableContainer" class="table-container bg-slate-800 rounded-lg shadow-lg">
+                <table class="dashboard-table w-full text-left text-sm text-slate-300">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="py-3 px-6">Application Type</th>
+                            <th scope="col" class="py-3 px-6">Discord Username</th>
+                            <th scope="col" class="py-3 px-6">Application Date</th>
+                            <th scope="col" class="py-3 px-6">Status</th>
+                            <th scope="col" class="py-3 px-6">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="applicationsTableBody">
+                        <!-- Applications will be dynamically inserted here -->
                     </tbody>
                 </table>
             </div>
@@ -178,7 +202,7 @@
         // Import Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, query, onSnapshot, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, query, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         
         // --- Globals from Canvas ---
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
@@ -193,6 +217,7 @@
         const loginForm = document.getElementById('loginForm');
         const logoutBtn = document.getElementById('logoutBtn');
         const bookingsTableBody = document.getElementById('bookingsTableBody');
+        const applicationsTableBody = document.getElementById('applicationsTableBody');
         const accessDeniedMsg = document.getElementById('accessDenied');
         const loadingScreen = document.getElementById('loading-screen');
         
@@ -205,7 +230,8 @@
         let app;
         let db;
         let auth;
-        let unsubscribe;
+        let unsubscribeBookings;
+        let unsubscribeApplications;
 
         function showMessageBox(title, message) {
             messageBoxTitle.textContent = title;
@@ -229,25 +255,65 @@
             return date.toLocaleDateString('en-US', options);
         }
 
+        async function deleteDocument(collectionPath, docId) {
+            try {
+                const docRef = doc(db, collectionPath, docId);
+                await deleteDoc(docRef);
+                showMessageBox("Success!", "The entry has been successfully removed.");
+            } catch (e) {
+                console.error("Error deleting document:", e);
+                showMessageBox("Error", "Failed to delete the entry. Please try again.");
+            }
+        }
+
         function renderBookings(bookings) {
             bookingsTableBody.innerHTML = '';
             if (bookings.length === 0) {
-                bookingsTableBody.innerHTML = '<tr><td colspan="7" class="py-4 text-center text-slate-400">No bookings found.</td></tr>';
+                bookingsTableBody.innerHTML = '<tr><td colspan="8" class="py-4 text-center text-slate-400">No bookings found.</td></tr>';
                 return;
             }
             bookings.forEach(booking => {
                 const row = `
                     <tr class="border-b border-slate-700">
-                        <td class="py-3 px-6">${booking.userId}</td>
+                        <td class="py-3 px-6">${booking.discordUsername || 'N/A'}</td>
                         <td class="py-3 px-6">${booking.origin}</td>
                         <td class="py-3 px-6">${booking.destination}</td>
                         <td class="py-3 px-6">${booking.departureDate}</td>
                         <td class="py-3 px-6">${booking.returnDate}</td>
                         <td class="py-3 px-6">${booking.passengers}</td>
                         <td class="py-3 px-6">${formatBookingDate(booking.bookingTimestamp)}</td>
+                        <td class="py-3 px-6">
+                            <button onclick="deleteDocument('/artifacts/${appId}/public/data/flight_bookings', '${booking.id}')" class="text-red-500 hover:text-red-700 transition-colors" title="Delete Booking">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
                     </tr>
                 `;
                 bookingsTableBody.innerHTML += row;
+            });
+        }
+
+        function renderManagementApplications(applications) {
+            applicationsTableBody.innerHTML = '';
+            if (applications.length === 0) {
+                applicationsTableBody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-slate-400">No applications found.</td></tr>';
+                return;
+            }
+            applications.forEach(app => {
+                const row = `
+                    <tr class="border-b border-slate-700">
+                        <td class="py-3 px-6">${app.applicationType || 'N/A'}</td>
+                        <td class="py-3 px-6">${app.discordUsername || 'N/A'}</td>
+                        <td class="py-3 px-6">${formatBookingDate(app.applicationTimestamp)}</td>
+                        <td class="py-3 px-6">${app.status || 'Pending'}</td>
+                        <td class="py-3 px-6">
+                            <button onclick="deleteDocument('/artifacts/${appId}/public/data/management_applications', '${app.id}')" class="text-red-500 hover:text-red-700 transition-colors" title="Delete Application">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                applicationsTableBody.innerHTML += row;
             });
         }
         
@@ -272,12 +338,12 @@
                         
                         // Listen for real-time booking data
                         const bookingsCollectionRef = collection(db, `/artifacts/${appId}/public/data/flight_bookings`);
-                        const q = query(bookingsCollectionRef);
+                        const bookingsQuery = query(bookingsCollectionRef);
 
-                        unsubscribe = onSnapshot(q, (querySnapshot) => {
+                        unsubscribeBookings = onSnapshot(bookingsQuery, (querySnapshot) => {
                             const bookings = [];
                             querySnapshot.forEach((doc) => {
-                                bookings.push(doc.data());
+                                bookings.push({ id: doc.id, ...doc.data() }); // Include doc.id for deletion
                             });
                             
                             // Sort bookings by timestamp descending (most recent first)
@@ -287,20 +353,46 @@
                             console.error("Error fetching bookings:", error);
                             renderBookings([]);
                         });
+
+                        // Listen for real-time application data
+                        const applicationsCollectionRef = collection(db, `/artifacts/${appId}/public/data/management_applications`);
+                        const applicationsQuery = query(applicationsCollectionRef);
+
+                        unsubscribeApplications = onSnapshot(applicationsQuery, (querySnapshot) => {
+                            const applications = [];
+                            querySnapshot.forEach((doc) => {
+                                applications.push({ id: doc.id, ...doc.data() }); // Include doc.id for deletion
+                            });
+                            
+                            // Sort applications by timestamp descending
+                            applications.sort((a, b) => new Date(b.applicationTimestamp) - new Date(a.applicationTimestamp));
+                            renderManagementApplications(applications);
+                        }, (error) => {
+                            console.error("Error fetching applications:", error);
+                            renderManagementApplications([]);
+                        });
+
                     } else {
                         // Not the authorized user
                         showUI('dashboardPage');
                         accessDeniedMsg.classList.remove('hidden');
                         bookingsTableBody.innerHTML = '';
-                        if (unsubscribe) {
-                            unsubscribe();
+                        applicationsTableBody.innerHTML = '';
+                        if (unsubscribeBookings) {
+                            unsubscribeBookings();
+                        }
+                        if (unsubscribeApplications) {
+                            unsubscribeApplications();
                         }
                     }
                 } else {
                     // Not logged in
                     showUI('loginPage');
-                    if (unsubscribe) {
-                        unsubscribe();
+                    if (unsubscribeBookings) {
+                        unsubscribeBookings();
+                    }
+                    if (unsubscribeApplications) {
+                        unsubscribeApplications();
                     }
                 }
             });
@@ -332,6 +424,9 @@
             });
 
             messageBoxCloseButton.addEventListener('click', hideMessageBox);
+
+            // Make the deleteDocument function globally accessible for the onclick attributes
+            window.deleteDocument = deleteDocument;
         });
     </script>
 </body>
